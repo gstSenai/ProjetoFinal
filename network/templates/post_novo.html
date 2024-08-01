@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post</title>
+</head>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+    }
+
+    body{
+        background-color: #0F0F0F;
+    }
+</style>
+<body>
+    <button id="style-button">
+        <a href="{{ url_for('homepage') }}" id="font-button">POST FORM</a>
+    </button>
+    {% block content %}
+   <div class="container">
+        <div class="row mt-4">
+        <h3>Novo Post</h3>
+        </div>
+        <form action="" method="post" class="row mt-4 p-4 round border shadow" enctype="multipart/form-data">
+            {{form.csrf_token}}
+
+            {{form.mensagem.label()}}
+            {{form.mensagem(class="form-control")}}
+
+            {{form.btnSubmit(class="btn btn-primary col-12 mt-3")}}
+        </form>
+   </div>
+{% endblock %}
+</body>
+</html>
