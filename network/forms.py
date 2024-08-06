@@ -47,25 +47,18 @@ class LoginForm(FlaskForm):
             raise Exception('Usuario nao encontrado')
 
 class PostForm(FlaskForm):
-     mensagem = StringField('Mensagem', validators=[DataRequired()])
-     imagem = FileField('Imagem', validators=[DataRequired()])
-     btnSubmit = SubmitField('Enviar')
+    mensagem = StringField('Mensagem:', validators=[DataRequired()])
+    cidade = StringField('Cidade:', validators=[DataRequired()])
+    profissao = StringField('Profissão:', validators=[DataRequired()])
+    btnSubmit = SubmitField('Enviar')
 
-     def save(self, user_id):
-        imagem = self.imagem.data
-        nome_seguro = secure_filename(imagem.filename)
-        post = Post (
-             mensagem=self.mensagem.data,
-             user_id=user_id,
-             imagem=nome_seguro
+    def save(self):
+        post = Post(
+            mensagem = self.mensagem.data,
+            cidade = self.cidade.data,
+            profissao = self.profissao.data
         )
-        caminho = os.path.join(
-             os.path.abspath(os.path.dirname(__file__)),
-             app.config['UPLOAD_FILES'],
-             'post',
-             nome_seguro
-        )
-        imagem.save(caminho)
+
         db.session.add(post)
         db.session.commit()
 
