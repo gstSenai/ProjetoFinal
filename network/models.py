@@ -6,7 +6,6 @@ from flask_login import UserMixin
 def load_user(user_id):
     return User.query.get(user_id)
 
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String, nullable=True)
@@ -16,10 +15,9 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='user', lazy=True)
     post_comentarios = db.relationship('PostComentarios', backref='user', lazy=True)
 
-
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    data_criacao = db.Column(db.DateTime, default=datetime.now())
+    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     mensagem = db.Column(db.String, nullable=True)
     cidade = db.Column(db.String, nullable=True)
     profissao = db.Column(db.String, nullable=True)
@@ -30,10 +28,10 @@ class Post(db.Model):
 
     def msg_resumo(self):
         return f"{self.mensagem[:10]} ..."
-    
+
 class PostComentarios(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    data_criacao = db.Column(db.DateTime,default=datetime.now())
+    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     comentario = db.Column(db.String, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=True)
@@ -41,5 +39,5 @@ class PostComentarios(db.Model):
 class UserLikes(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key=True)
-    user = db.relationship(User, backref='user_likes')
-    post = db.relationship(Post, backref='post_likes')
+    user = db.relationship('User', backref='user_likes')
+    post = db.relationship('Post', backref='post_likes')

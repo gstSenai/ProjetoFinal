@@ -3,6 +3,7 @@ from wtforms import StringField, SubmitField, PasswordField, FileField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from network import db, app, bcrypt
 from network.models import PostComentarios, User, Post
+from flask_login import current_user
 
 import os
 from werkzeug.utils import secure_filename
@@ -56,7 +57,8 @@ class PostForm(FlaskForm):
         post = Post(
             mensagem = self.mensagem.data,
             cidade = self.cidade.data,
-            profissao = self.profissao.data
+            profissao = self.profissao.data,
+            user_id=current_user.id
         )
 
         db.session.add(post)

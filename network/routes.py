@@ -58,12 +58,39 @@ def logout():
 @login_required
 def like_post(post_id):
     post = Post.query.get(post_id)
-    if post:
-        existing_like = UserLikes.query.filter_by(user_id=current_user.id, post_id=post_id).first()
-        if not existing_like:
-            new_like = UserLikes(user_id=current_user.id, post_id=post_id)
-            db.session.add(new_like)
-            post.likes += 1
-            db.session.commit()
+    if not post:
+        flash('Post não encontrado.', 'error')
+        return redirect(url_for('homepage'))
+
+    existing_like = UserLikes.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+    if existing_like:
+        flash('Você já curtiu este post.', 'info')
+    else:
+        new_like = UserLikes(user_id=current_user.id, post_id=post_id)
+        db.session.add(new_like)
+        post.likes += 1
+        db.session.commit()
+        flash('Post curtido com sucesso!', 'success')
+
     return redirect(url_for('homepage'))
 
+@app.route('/post/delete/<int:post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get(post_id)
+    if not post:
+        flash('Post não encontrado.', 'error')
+        return redirect(url_for('homepage'))
+    
+    if post.user_id == current_user.id:
+        try:
+            db.session.delete(post)
+            db.session.commit()
+            flash('Post excluído com sucesso!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao excluir o post: {str(e)}', 'danger')
+    else:
+        flash('Você não tem permissão para excluir este post.', 'danger')
+
+    return redirect(url_for('homepage'))
