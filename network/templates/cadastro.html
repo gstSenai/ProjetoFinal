@@ -4,34 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .form-container {
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-header {
+            margin-bottom: 20px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+        body{
+            background-color: #0F0F0F;
+        }
+    </style>
 </head>
 <body>
-    {% block content %}
-   <div class="container">
-        <div class="row mt-4">
-        <h3>Login User</h3>
+    
+    <div class="container">
+        <div class="form-container">
+            <div class="form-header text-center">
+                <h3>Cadastro de Usuário</h3>
+            </div>
+            <form action="" method="post">
+                {{ form.csrf_token }}
+
+                <div class="form-group">
+                    {{ form.nome.label(class="form-label") }}
+                    {{ form.nome(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.sobrenome.label(class="form-label") }}
+                    {{ form.sobrenome(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.senha.label(class="form-label") }}
+                    {{ form.senha(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.confirmacao_senha.label(class="form-label") }}
+                    {{ form.confirmacao_senha(class="form-control") }}
+                </div>
+
+                <button type="submit" class="btn btn-custom btn-block">Cadastrar</button>
+            </form>
         </div>
-        <form action="" method="post" class="row mt-4 p-4 round border shadow">
-            {{form.csrf_token}}
-
-            {{form.nome.label()}}
-            {{form.nome(class="form-control")}}
-
-            {{form.sobrenome.label()}}
-            {{form.sobrenome(class="form-control")}}
-
-            {{form.email.label()}} 
-            {{form.email(class="form-control")}}
-
-            {{form.senha.label()}}
-            {{form.senha(class="form-control")}}
-
-            {{form.confirmacao_senha.label()}}
-            {{form.confirmacao_senha(class="form-control")}}
-
-            {{form.btnSubmit(class="btn btn-primary col-12 mt-3")}}
-        </form>
-   </div>
-{% endblock %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

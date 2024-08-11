@@ -1,5 +1,5 @@
 from network import app,db
-from flask import render_template,redirect, url_for, flash
+from flask import render_template,redirect, url_for, flash, request
 from network.models import Post,User,PostComentarios, UserLikes
 from network.forms import PostForm, UserForm, PostComentarioForm, LoginForm
 from flask_login import login_user, current_user, logout_user, login_required
@@ -22,6 +22,7 @@ def homepage():
     return render_template('index.html', form=form, context=context)
     
 @app.route('/post/novo',methods=['GET', 'POST'])
+@login_required
 def PostNovo():
     form = PostForm()
     if form.validate_on_submit():
@@ -57,21 +58,20 @@ def logout():
 @app.route('/like/<int:post_id>', methods=['POST'])
 @login_required
 def like_post(post_id):
-    post = Post.query.get(post_id)
-    if not post:
-        flash('Post não encontrado.', 'error')
-        return redirect(url_for('homepage'))
-
+    post = Post.query.get_or_404(post_id)  
+    
     existing_like = UserLikes.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+    
     if existing_like:
-        flash('Você já curtiu este post.', 'info')
+        db.session.delete(existing_like)
+        post.likes_count -= 1  
+        flash('Você removeu seu like.', 'info')
     else:
         new_like = UserLikes(user_id=current_user.id, post_id=post_id)
         db.session.add(new_like)
-        post.likes += 1
-        db.session.commit()
+        post.likes_count += 1 
         flash('Post curtido com sucesso!', 'success')
-
+    db.session.commit()
     return redirect(url_for('homepage'))
 
 @app.route('/post/delete/<int:post_id>', methods=['POST'])
@@ -84,6 +84,7 @@ def delete_post(post_id):
     
     if post.user_id == current_user.id:
         try:
+            UserLikes.query.filter_by(post_id=post_id).delete()
             db.session.delete(post)
             db.session.commit()
             flash('Post excluído com sucesso!', 'success')
@@ -94,3 +95,26 @@ def delete_post(post_id):
         flash('Você não tem permissão para excluir este post.', 'danger')
 
     return redirect(url_for('homepage'))
+
+@app.route('/post/<int:post_id>/add_comment', methods=['POST'])
+@login_required
+def add_comment(post_id):
+    post = Post.query.get_or_404(post_id)
+    comentario_texto = request.form.get('comentario')
+
+    if comentario_texto:
+        comentario = PostComentarios(
+            comentario=comentario_texto,
+            user_id=current_user.id,
+            post_id=post.id
+        )
+        db.session.add(comentario)
+        db.session.commit()
+        flash('Comentário adicionado com sucesso!', 'success')
+    else:
+        flash('Não é possível adicionar um comentário vazio.', 'danger')
+
+    return redirect(url_for('homepage'))
+
+
+

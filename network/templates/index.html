@@ -147,6 +147,7 @@
     .btn-danger:hover {
         background-color: #c21c4f;
     }
+
 </style>
 
 <body>
@@ -210,19 +211,37 @@
                                         <p><strong>Cidade:</strong> {{ post.cidade }}</p>
                                     </div>
                                     <div class="post-actions">
-                                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="post"
-                                            class="d-inline">
+                                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="post" class="d-inline">
                                             <button type="submit" class="btn btn-white">
-                                                <img src="../static/assets/like.png" class="bg-white" width="25px"> {{
-                                                post.likes }}
+                                                <img src="{{ url_for('static', filename='assets/like.png') }}" class="bg-white " width="25px"> {{ post.likes_count }}
                                             </button>
                                         </form>
                                         {% if post.user_id == current_user.id %}
-                                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post"
-                                            class="d-inline">
+                                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post" class="d-inline">
                                             <button type="submit" class="btn btn-danger">Excluir</button>
                                         </form>
                                         {% endif %}
+                                    </div>
+                                    <div class="post-comments mt-3">
+                                        <h3 class="text-white">Comentários ({{ post.comentarios|length }})</h3>
+                                        <ul>
+                                            {% for comentario in post.comentarios %}
+                                            <li>
+                                                <p><strong>{{ comentario.user.nome }}:</strong> {{ comentario.comentario }}</p>
+                                                <p><small>Postado em: {{ comentario.data_criacao.strftime('%d/%m/%Y') }}</small></p>
+                                            </li>
+                                            {% else %}
+                                            <li>Nenhum comentário ainda.</li>
+                                            {% endfor %}
+                                        </ul>
+                                        <form action="{{ url_for('add_comment', post_id=post.id) }}" method="post">
+                                            <div class="form-group">
+                                                <textarea name="comentario" class="form-control" placeholder="Adicione um comentário"></textarea>
+                                            </div>
+                                            <div class="mt-3">
+                                                <button type="submit" class="btn btn-primary">Comentar</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </td>

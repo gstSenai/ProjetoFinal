@@ -24,11 +24,15 @@ class Post(db.Model):
     imagem = db.Column(db.String, nullable=True, default='default.png')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     comentarios = db.relationship('PostComentarios', backref='post', lazy=True)
-    likes = db.Column(db.Integer, default=0)
+    likes_count = db.Column(db.Integer, default=0)
+    user_likes = db.relationship('UserLikes', backref='liked_post', lazy=True, cascade="all, delete-orphan")
+
+    def count_likes(self):
+        return UserLikes.query.filter_by(post_id=self.id).count()
 
     def msg_resumo(self):
         return f"{self.mensagem[:10]} ..."
-
+    
 class PostComentarios(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
