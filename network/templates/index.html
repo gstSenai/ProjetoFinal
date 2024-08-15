@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
+
 <style>
     * {
         padding: 0;
@@ -20,9 +22,11 @@
         color: white;
     }
 
+
     #salve-pls {
         height: 100%;
     }
+
 
     #style-button {
         border-radius: 20px;
@@ -33,6 +37,7 @@
         transition: background-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
     }
 
+
     #style-button:hover {
         background-color: #0056b3;
         color: #fff;
@@ -40,11 +45,13 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
+
     #font-button {
         text-decoration: none;
         color: #0F0F0F;
         font-family: "Pridi", serif;
     }
+
 
     #local-sidebar {
         display: flex;
@@ -52,10 +59,12 @@
         justify-content: space-between;
     }
 
+
     #local-img {
         margin-left: 5rem;
         margin-top: -3rem;
     }
+
 
     .style-profi {
         width: 4rem;
@@ -67,13 +76,16 @@
         align-items: center;
     }
 
+
     #local-profi {
         display: flex;
         flex-direction: row;
         gap: 3rem;
         justify-content: center;
 
+
     }
+
 
     #local-login-cad {
         display: flex;
@@ -84,17 +96,21 @@
         margin-top: 2rem;
     }
 
+
     .style-login {
         all: unset;
     }
+
 
     .rem-img {
         background-color: transparent;
     }
 
+
     .post-row {
         margin-bottom: 15px;
     }
+
 
     .post-container {
         background-color: #f5f8fa;
@@ -102,6 +118,7 @@
         border-radius: 10px;
         padding: 15px;
     }
+
 
     .post-header {
         display: flex;
@@ -111,19 +128,23 @@
         color: #657786;
     }
 
+
     .post-username {
         font-weight: bold;
         color: #14171a;
     }
 
+
     .post-date {
         color: #657786;
     }
+
 
     .post-content {
         font-size: 16px;
         margin-bottom: 10px;
     }
+
 
     .post-actions {
         display: flex;
@@ -131,11 +152,14 @@
         gap: 10px;
     }
 
+
     .post-actions .btn {
         background-color: #ffffff;
         border: 1px solid #e1e8ed;
-        color: #657786;
     }
+
+
+
 
 
 
@@ -144,15 +168,19 @@
         border: none;
     }
 
+
     .btn-danger:hover {
         background-color: #c21c4f;
     }
 
+
 </style>
+
 
 <body>
     <div id="salve-pls"></div>
     {% extends 'base.html' %}
+
 
     {% block content %}
     <div class="container">
@@ -160,9 +188,10 @@
         {% if current_user.is_authenticated %}
         <div>
             <div id="local-sidebar">
-                <div class="text-center">
-                    <span class="btn btn-primary ">{{current_user.nome}} {{current_user.sobrenome}}</spa>
-                        <a href="{{url_for('logout')}}" class="btn btn-danger">Sair</a>
+                <div class="">
+                    <img src="{{ url_for('static', filename='assets/user.png') }}" alt="" width="40px" class="bg-white rounded-circle">
+                    <span>{{current_user.nome}} {{current_user.sobrenome}}</spa>
+                    <a href="{{url_for('logout')}}" class="btn btn-danger">Sair</a>
                 </div>
                 <div id="local-button-home">
                     <button id="style-button">
@@ -170,31 +199,45 @@
                     </button>
                 </div>
                 <div id="local-img">
+                    <a href="{{url_for('homepage')}}">
                     <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="">
+                    </a>
                 </div>
             </div>
-            <div id="local-profi">
+            <div id="local-profi" class="mt-5">
                 <div class="style-profi">
-                    <img src="{{ url_for('static', filename='assets/programador.png') }}" alt="" class="rem-img">
+                    <a href="{{ url_for('filter_posts', profession='Programador') }}" class="rem-img">
+                        <img src="{{ url_for('static', filename='assets/programador.png') }}" alt="" class="rem-img">
+                    </a>
                 </div>
                 <div class="style-profi">
-                    <img src="{{ url_for('static', filename='assets/medico.png') }}" class="rem-img">
+                    <a href="{{ url_for('filter_posts', profession='Medico') }}" class="rem-img">
+                        <img src="{{ url_for('static', filename='assets/medico.png') }}" class="rem-img">
+                    </a>
                 </div>
                 <div class="style-profi">
-                    <img src="{{ url_for('static', filename='assets/mecanico.png') }}" class="rem-img">
+                    <a href="{{ url_for('filter_posts', profession='Mecanico') }}" class="rem-img">
+                        <img src="{{ url_for('static', filename='assets/mecanico.png') }}" class="rem-img">
+                    </a>
                 </div>
                 <div class="style-profi">
-                    <img src="{{ url_for('static', filename='assets/pintor.png') }}" class="rem-img">
+                    <a href="{{ url_for('filter_posts', profession='Pintor') }}" class="rem-img">
+                        <img src="{{ url_for('static', filename='assets/pintor.png') }}" class="rem-img">
+                    </a>
                 </div>
                 <div class="style-profi">
-                    <img src="{{ url_for('static', filename='assets/fazendeiro.png') }}" class="rem-img">
+                    <a href="{{ url_for('filter_posts', profession='Fazendeiro') }}" class="rem-img">
+                        <img src="{{ url_for('static', filename='assets/fazendeiro.png') }}" class="rem-img">
+                    </a>
                 </div>
                 <div class="style-profi">
-                    <img src="{{ url_for('static', filename='assets/trabalhador.png') }}" class="rem-img">
+                    <a href="{{ url_for('filter_posts', profession='Trabalhador') }}" class="rem-img">
+                        <img src="{{ url_for('static', filename='assets/trabalhador.png') }}" class="rem-img">
+                    </a>
                 </div>
             </div>
             <div class="container mt-4">
-                <h1 class="mb-4">Lista de Posts</h1>
+                <h1 class="mb-4">Posts</h1>
                 <table class="table table-separator">
                     <tbody>
                         {% for post in context['dados'] %}
@@ -212,15 +255,18 @@
                                     </div>
                                     <div class="post-actions">
                                         <form action="{{ url_for('like_post', post_id=post.id) }}" method="post" class="d-inline">
-                                            <button type="submit" class="btn btn-white">
-                                                <img src="{{ url_for('static', filename='assets/like.png') }}" class="bg-white " width="25px"> {{ post.likes_count }}
+                                            <button type="submit" class="btn btn-black bg-danger">
+                                                <img src="{{ url_for('static', filename='assets/like.png') }}" class="bg-danger" width="25px"> {{ post.likes_count }}
                                             </button>
                                         </form>
                                         {% if post.user_id == current_user.id %}
                                         <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post" class="d-inline">
-                                            <button type="submit" class="btn btn-danger">Excluir</button>
+                                            <button type="submit" class="btn btn-danger text-black">Excluir</button>
                                         </form>
                                         {% endif %}
+                                        <a href="{{ url_for('chat', post_id=post.id) }}" class="btn btn-white">
+                                            <img src="{{ url_for('static', filename='assets/messenger.png') }}" width="20px" class="bg-white text-black">
+                                        </a>
                                     </div>
                                     <div class="post-comments mt-3">
                                         <h3 class="text-white">Comentários ({{ post.comentarios|length }})</h3>
@@ -250,28 +296,32 @@
                     </tbody>
                 </table>
             </div>
+           
             {% else %}
+
 
             <form action="" method="post" class="row mt-4 p-4 round border shadow">
                 <h3>Faça o seu Login</h3>
                 {{form.csrf_token}}
 
+
                 {{form.email.label()}}
                 {{form.email(class="form-control")}}
+
 
                 {{form.senha.label()}}
                 {{form.senha(class="form-control")}}
 
+
                 {{form.btnSubmit(class="btn btn-primary col-12 mt-3")}}
+
 
                 <div class="col-12 mt-4">Tem cadastro? <a href="{{ url_for('Cadastro') }}"
                         class="btn btn-primary">Clique aqui e faça o seu cadastro</a></div>
-
             </form>
             {% endif %}
             <hr>
         </div>
     </div>
-
     {% endblock %}
 </div>
