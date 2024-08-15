@@ -1,8 +1,13 @@
 from network import app,db
-from flask import render_template,redirect, url_for, flash, request, session
-from network.models import Post,User,PostComentarios, UserLikes
+from flask import render_template,redirect, url_for, flash, request, session, jsonify
+from network.models import Post,User,PostComentarios, UserLikes, Message
 from network.forms import PostForm, UserForm, PostComentarioForm, LoginForm
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_socketio import SocketIO,join_room, leave_room, emit,send
+from datetime import datetime
+
+
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
@@ -140,4 +145,12 @@ def filter_posts(profession):
 def chat(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('chat.html', post=post)
+
+socketio = SocketIO(app,cors_allowed_origins="*")
+
+@socketio.on('message')
+def handle_message(message):
+    print("Recebeu a Mensagem: " + message)
+    if message != "Usuario Conenctado!":
+        send(message, brodcast = True)
 

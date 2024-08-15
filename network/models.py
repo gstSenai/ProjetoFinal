@@ -45,3 +45,16 @@ class UserLikes(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key=True)
     user = db.relationship('User', backref='user_likes')
     post = db.relationship('Post', backref='post_likes')
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    from_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    to_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.String(500), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    from_user = db.relationship('User', foreign_keys=[from_user_id], backref='sent_messages')
+    to_user = db.relationship('User', foreign_keys=[to_user_id], backref='received_messages')
+
+    def __repr__(self):
+        return f'<Message {self.id}>'
