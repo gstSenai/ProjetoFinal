@@ -4,6 +4,7 @@ from network.models import Post,User,PostComentarios, UserLikes, Message
 from network.forms import PostForm, UserForm, PostComentarioForm, LoginForm
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_socketio import SocketIO,join_room, leave_room, emit,send
+from sqlalchemy.orm import joinedload
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -143,7 +144,9 @@ def chat(post_id):
     post = Post.query.get_or_404(post_id)
     messages = Message.query.filter_by(post_id=post_id).order_by(Message.timestamp.asc()).all()
     
-    return render_template('chat.html', post=post, messages=messages)
+    users = User.query.join(Message, Message.from_user_id == User.id).filter(Message.post_id == post_id).distinct().all()
+    
+    return render_template('chat.html', post=post, messages=messages, users=users)
 
 @app.route('/send_message', methods=['POST'])
 @login_required

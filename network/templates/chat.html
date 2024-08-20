@@ -10,19 +10,60 @@
             padding: 10px;
             height: 400px;
             overflow-y: scroll;
+            width: 75%;
+            float: left;
+        }
+        #sidebar {
+            border: 1px solid #ddd;
+            padding: 10px;
+            width: 20%;
+            height: 400px;
+            overflow-y: scroll;
+            float: right;
         }
         #chat-form {
+            clear: both;
             margin-top: 10px;
+        }
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        .message {
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .message.from-me {
+            background-color: #e0f7fa;
+            align-self: flex-end;
+        }
+        .message.from-others {
+            background-color: #f0f0f0;
+            align-self: flex-start;
         }
     </style>
 </head>
 <body>
     <div id="chat-container">
         {% for message in messages %}
-            <p><strong>{{ message.from_user.nome }}:</strong> {{ message.content }}</p>
+            <div class="message-container">
+                <p class="message {% if message.from_user.id == current_user.id %}from-me{% else %}from-others{% endif %}">
+                    <strong>{{ message.from_user.nome }}:</strong> {{ message.content }}
+                </p>
+            </div>
         {% endfor %}
     </div>
     
+    <div id="sidebar">
+        <h3>Usuários</h3>
+        <ul>
+            {% for user in users %}
+                <li>{{ user.nome }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
     <form id="chat-form">
         <input type="hidden" id="post_id" value="{{ post.id }}">
         <textarea id="message" placeholder="Digite sua mensagem aqui" required></textarea>
@@ -51,8 +92,11 @@
 
         socket.on('receive_message', function(data) {
             const chatContainer = document.getElementById('chat-container');
-            const newMessage = document.createElement('p');
-            newMessage.innerHTML = `<strong>${data.from_user_id}:</strong> ${data.message}`;
+            const newMessage = document.createElement('div');
+            newMessage.className = 'message-container';
+            newMessage.innerHTML = `<p class="message ${data.from_user_id === {{ current_user.id }} ? 'from-me' : 'from-others'}">
+                <strong>${data.from_user_id}:</strong> ${data.message}
+            </p>`;
             chatContainer.appendChild(newMessage);
             chatContainer.scrollTop = chatContainer.scrollHeight; 
         });
@@ -62,7 +106,7 @@
             const statusMessage = document.createElement('p');
             statusMessage.innerHTML = `<em>${data.msg}</em>`;
             chatContainer.appendChild(statusMessage);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            chatContainer.scrollTop = chatContainer.scrollHeight; 
         });
     </script>
 </body>
