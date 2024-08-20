@@ -2,78 +2,67 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Application</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+    <title>Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <style>
-
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #0F0F0F;
-            color:  white;
-        }
-        #chatContainer {
-            width: 80%;
-            margin: 0 auto;
-            max-width: 600px;
-        }
-        #messages {
-            border: 1px solid #ccc;
+        #chat-container {
+            border: 1px solid #ddd;
             padding: 10px;
-            height: 300px;
+            height: 400px;
             overflow-y: scroll;
-            margin-bottom: 10px;
         }
-        #messageForm {
-            display: flex;
-            justify-content: space-between;
-        }
-        #messageInput {
-            flex: 1;
-            padding: 10px;
-            margin-right: 10px;
-        }
-        #sendBtn {
-            padding: 10px;
+        #chat-form {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="ml-5">
-        <button type="button" class="btn btn-primary">
-            <a href="{{ url_for('homepage') }}" class="text-white"><img src="../static/assets/casa.png" alt="" width="50px"></a>
-        </button>
+    <div id="chat-container">
+        {% for message in messages %}
+            <p><strong>{{ message.from_user.nome }}:</strong> {{ message.content }}</p>
+        {% endfor %}
     </div>
-    <div id="chatContainer">
-        <div id="messages"></div>
-        <form id="messageForm">
-            <input type="text" id="username" placeholder="Enter your username" required>
-            <input type="text" id="messageInput" placeholder="Enter your message" required>
-            <button type="button" id="sendBtn">Send</button>
-        </form>
-    </div>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var socket = io.connect("http://localhost:5000"); // Certifique-se de que a porta está correta
-            socket.on('connect', function(){
-                socket.send("User connected!");
-            });
+    
+    <form id="chat-form">
+        <input type="hidden" id="post_id" value="{{ post.id }}">
+        <textarea id="message" placeholder="Digite sua mensagem aqui" required></textarea>
+        <button type="submit">Enviar</button>
+    </form>
 
-            socket.on('message', function(data){
-                $('#messages').append($('<p>').text(data));
-                $('#messages').scrollTop($('#messages')[0].scrollHeight); // Auto scroll para a nova mensagem
-            });
+    <script>
+        const socket = io.connect('http://' + document.domain + ':' + location.port);
+        const post_id = document.getElementById('post_id').value;
 
-            $('#sendBtn').on('click', function(){
-                var username = $('#username').val();
-                var message = $('#messageInput').val();
-                if (username && message) {
-                    socket.send(username + ': ' + message);
-                    $('#messageInput').val('');
-                }
-            });
+        function clearChat() {
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML = '';
+        }
+
+        socket.on('connect', function() {
+            socket.emit('join', {post_id: post_id});
+        });
+
+        document.getElementById('chat-form').onsubmit = function(event) {
+            event.preventDefault();
+            const message = document.getElementById('message').value;
+            socket.emit('send_message', {message: message, post_id: post_id, to_user_id: {{ post.user_id }}});
+            document.getElementById('message').value = '';
+        };
+
+        socket.on('receive_message', function(data) {
+            const chatContainer = document.getElementById('chat-container');
+            const newMessage = document.createElement('p');
+            newMessage.innerHTML = `<strong>${data.from_user_id}:</strong> ${data.message}`;
+            chatContainer.appendChild(newMessage);
+            chatContainer.scrollTop = chatContainer.scrollHeight; 
+        });
+
+        socket.on('status', function(data) {
+            const chatContainer = document.getElementById('chat-container');
+            const statusMessage = document.createElement('p');
+            statusMessage.innerHTML = `<em>${data.msg}</em>`;
+            chatContainer.appendChild(statusMessage);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         });
     </script>
 </body>

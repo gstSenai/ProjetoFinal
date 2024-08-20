@@ -4,10 +4,7 @@ from network.models import Post,User,PostComentarios, UserLikes, Message
 from network.forms import PostForm, UserForm, PostComentarioForm, LoginForm
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_socketio import SocketIO,join_room, leave_room, emit,send
-from datetime import datetime
 
-
-socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
@@ -144,13 +141,69 @@ def filter_posts(profession):
 @login_required
 def chat(post_id):
     post = Post.query.get_or_404(post_id)
-    return render_template('chat.html', post=post)
+    messages = Message.query.filter_by(post_id=post_id).order_by(Message.timestamp.asc()).all()
+    
+    return render_template('chat.html', post=post, messages=messages)
+
+@app.route('/send_message', methods=['POST'])
+@login_required
+def send_message():
+    content = request.form.get('message')
+    post_id = request.form.get('post_id')
+    post = Post.query.get_or_404(post_id)
+    
+    if content:
+        message = Message(
+            from_user_id=current_user.id,
+            to_user_id=post.user_id,
+            content=content
+        )
+        db.session.add(message)
+        db.session.commit()
+        socketio.emit('receive_message', {'message': content, 'from_user_id': current_user.id}, room=post_id)
+    
+    return jsonify({'success': True})
+
 
 socketio = SocketIO(app,cors_allowed_origins="*")
 
-@socketio.on('message')
-def handle_message(message):
-    print("Recebeu a Mensagem: " + message)
-    if message != "Usuario Conenctado!":
-        send(message, brodcast = True)
+@socketio.on('connect')
+def on_connect():
+    print('Client connected')
+
+@socketio.on('disconnect')
+def on_disconnect():
+    print('Client disconnected')
+
+@socketio.on('join')
+def on_join(data):
+    post_id = data['post_id']
+    join_room(post_id)
+    emit('status', {'msg': f'{current_user.nome} entrou no chat.'}, room=post_id)
+
+@socketio.on('leave')
+def on_leave(data):
+    post_id = data['post_id']
+    leave_room(post_id)
+    emit('status', {'msg': f'{current_user.nome} saiu do chat.'}, room=post_id)
+
+@socketio.on('send_message')
+def handle_send_message_event(data):
+    post_id = data['post_id']
+    content = data['message']
+    
+    message = Message(
+        from_user_id=current_user.id,
+        to_user_id=data['to_user_id'],
+        post_id=post_id,
+        content=content
+    )
+    db.session.add(message)
+    db.session.commit()
+    
+    emit('receive_message', {'message': content, 'from_user_id': current_user.id}, room=post_id)
+
+
+
+
 
