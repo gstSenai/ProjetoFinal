@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .profile-header img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+        .profile-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .profile-header p {
+            font-size: 16px;
+            color: #666;
+        }
+        .profile-header .btn {
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        .btn-home {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-transform: uppercase;
+            display: inline-block;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .btn-home:hover {
+            background-color: #0056b3;
+        }
+        .btn-home:focus, .btn-home:active {
+            outline: none;
+            box-shadow: none;
+        }
+        #teste-img {
+            width: 30px;
+            height: 30px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-text {
+            color: #6c757d;
+        }
+        .form-control-file {
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            padding: .375rem .75rem;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="profile-header">
+            <img src="{{ url_for('static', filename='assets/user.png') }}" alt="Foto do Perfil">
+            <div>
+                <h1>{{ current_user.nome }} {{ current_user.sobrenome }}</h1>
+                <p>{{ current_user.email }}</p>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Sair</a>
+                <a href="{{ url_for('homepage') }}" class="btn-home">
+                    <img src="{{ url_for('static', filename='assets/casa2.png') }}" alt="Home" id="teste-img">
+                    Home
+                </a>
+            </div>
+        </div>
+        
+        <h2>Editar Perfil</h2>
+        <form method="POST" action="{{ url_for('profile') }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                {{ form.nome(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="sobrenome">Sobrenome</label>
+                {{ form.sobrenome(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                {{ form.email(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                {{ form.senha(class="form-control") }}
+                <small class="form-text text-muted">Deixe em branco se não deseja alterar a senha.</small>
+            </div>
+            <div class="form-group">
+                <label for="confirmacao_senha">Confirmar Senha</label>
+                {{ form.confirmacao_senha(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="profile_image">Imagem de Perfil</label>
+                <input type="file" class="form-control-file" id="profile_image" name="profile_image" accept="image/*">
+                <small class="form-text text-muted">Selecione uma imagem para atualizar a foto do perfil.</small>
+            </div>
+            <div class="form-group">
+                {{ form.btnSubmit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</body>
+</html>

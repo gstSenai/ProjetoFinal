@@ -1,4 +1,4 @@
-from network import app,db
+from network import app,db, bcrypt
 from flask import render_template,redirect, url_for, flash, request, session, jsonify
 from network.models import Post,User,PostComentarios, UserLikes, Message
 from network.forms import PostForm, UserForm, PostComentarioForm, LoginForm
@@ -205,6 +205,34 @@ def handle_send_message_event(data):
     db.session.commit()
     
     emit('receive_message', {'message': content, 'from_user_id': current_user.id}, room=post_id)
+
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    form = UserForm()
+
+    if form.validate_on_submit():
+        current_user.nome = form.nome.data
+        current_user.sobrenome = form.sobrenome.data
+        current_user.email = form.email.data
+
+        if form.senha.data:
+            if form.senha.data == form.confirmacao_senha.data:
+                current_user.senha = bcrypt.generate_password_hash(form.senha.data.encode('utf-8'))
+            else:
+                flash('As senhas não coincidem', 'danger')
+                return redirect(url_for('profile'))
+
+        db.session.commit()
+        flash('Perfil atualizado com sucesso', 'success')
+        return redirect(url_for('homepage'))
+
+    if request.method == 'GET':
+        form.nome.data = current_user.nome
+        form.sobrenome.data = current_user.sobrenome
+        form.email.data = current_user.email
+
+    return render_template('profile.html', form=form)
 
 
 

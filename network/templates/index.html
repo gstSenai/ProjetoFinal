@@ -187,11 +187,13 @@
         <hr>
         {% if current_user.is_authenticated %}
         <div>
-            <div id="local-sidebar">
+            <div id="local-sidebar" >
                 <div class="">
                     <img src="{{ url_for('static', filename='assets/user.png') }}" alt="" width="40px" class="bg-white rounded-circle">
                     <span>{{current_user.nome}} {{current_user.sobrenome}}</spa>
-                    <a href="{{url_for('logout')}}" class="btn btn-danger">Sair</a>
+                    <a href="{{ url_for('profile') }}">
+                        <img src="{{ url_for('static', filename='assets/configuracao.png') }}" alt="" width="30px">
+                    </a>    
                 </div>
                 <div id="local-button-home">
                     <button id="style-button">
