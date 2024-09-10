@@ -1,153 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro</title>
+    <title>Cadastro de Usuário</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        
+        .form-container {
+            background-color: #000; 
+            border: 1px solid #333; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-header img {
+            max-width: 150px; 
+            margin-bottom: 20px; 
+        }
+
+        .form-header h3 {
+            color: #fff; 
+        }
+
+        .form-label {
+            color: #fff; 
+        }
+        
+        .form-control {
+            background-color: #333; 
+            color: #fff; 
+            border: 1px solid #555; 
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+        }
+
+        .btn-custom {
+            background-color: #007bff; 
+            color: #fff;
+            border: none; 
+            border-radius: 5px; 
+            padding: 10px 20px;
+            font-size: 16px; 
+        }
+        
+        .btn-custom:hover {
+            background-color: #0056b3; 
+        }
+    </style>
 </head>
-
-<style>
-    * {
-        padding: 0;
-        margin: 0;
-    }
-
-    body{
-        height: 100vh;
-        box-sizing: border-box;
-        background-color: #0F0F0F;
-        color: white;
-
-    }
-
-    .titulo{
-        color: white;
-    }
-
-    form{
-        color: white;
-    }
-
-    .desc{
-        width: 1000px;
-        height: 300px;
-        border: 1px solid white;
-        margin: 5% 13%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        border-radius: 50px;
-        font-size: 15px;
-        padding: 90px 0px;
-        text-decoration: none;
-        gap: 14px;
-    }
-
-    #local-img{
-        padding-right: 50%;
-        max-width: 150px;
-        margin-top: 30px;
-        margin-left: -60px;
-    }
-
-    #teste{
-        display: flex;
-        flex-direction: row;
-    }
-
-    #escreva{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-
-    }
-
-    .container{
-        max-width: 600px;
-        margin-top: 10px;
-    }
-
-    .form-container {
-        border-radius: 10px;
-        padding: 20px;
-        background-color: #f8f9fa;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 10px;
-        width: 200px;
-        height: 300px;
-    }
-
-    .form-header {
-        margin-bottom: 20px;
-        color: black;
-    }
-
-    .form-group{
-        color: black;
-    }
-
-    .btn-custom {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-    }
-    
-    .btn-custom:hover {
-        background-color: #0056b3;
-    }
-
-</style>
 <body>
-    <form class="desc" action="" method="post" class="row mt-4 p-4 round border shadow">
-        <div id="teste">
-            <div id="local-img">
+    <div class="container">
+        <div class="form-container">
+            <div class="form-header">
                 <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="" width="230">
+                <h3>Cadastro de Usuário</h3>
             </div>
-    
-            <div class="container">
-                <div class="form-container">
-                    <div class="form-header text-center">
-                        <h3>Cadastro de Usuário</h3>
-                    </div>
-                    <form action="" method="post">
-                        {{ form.csrf_token }}
-        
-                        <div class="form-group">
-                            {{ form.nome.label(class="form-label") }}
-                            {{ form.nome(class="form-control") }}
-                        </div>
-        
-                        <div class="form-group">
-                            {{ form.sobrenome.label(class="form-label") }}
-                            {{ form.sobrenome(class="form-control") }}
-                        </div>
-        
-                        <div class="form-group">
-                            {{ form.email.label(class="form-label") }}
-                            {{ form.email(class="form-control") }}
-                        </div>
-        
-                        <div class="form-group">
-                            {{ form.senha.label(class="form-label") }}
-                            {{ form.senha(class="form-control") }}
-                        </div>
-        
-                        <div class="form-group">
-                            {{ form.confirmacao_senha.label(class="form-label") }}
-                            {{ form.confirmacao_senha(class="form-control") }}
-                        </div>
-        
-                        <button type="submit" class="btn btn-custom btn-block">Cadastrar</button>
-                    </form>
+            <form action="" method="post">
+                {{ form.csrf_token }}
+
+                <div class="form-group">
+                    {{ form.nome.label(class="form-label") }}
+                    {{ form.nome(class="form-control") }}
                 </div>
-            </div>
-            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
+
+                <div class="form-group">
+                    {{ form.sobrenome.label(class="form-label") }}
+                    {{ form.sobrenome(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.senha.label(class="form-label") }}
+                    {{ form.senha(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.confirmacao_senha.label(class="form-label") }}
+                    {{ form.confirmacao_senha(class="form-control") }}
+                </div>
+
+                <button type="submit" class="btn btn-custom btn-block">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>

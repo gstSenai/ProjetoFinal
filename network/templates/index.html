@@ -185,8 +185,6 @@
     .h-150 {
         height: 80px !important;
     }
-
-    
 </style>
 
 
@@ -221,9 +219,10 @@
                 </div>
 
                 <div class="mb-4 d-flex justify-content-center">
-                    <a href="{{ url_for('PostNovo') }}" class="btn btn-primary w-50 h-150 pt-3" style="font-size: 2rem; font-weight: 500;">COMPARTILHAR</a>
+                    <a href="{{ url_for('PostNovo') }}" class="btn btn-primary w-50 h-150 pt-3"
+                        style="font-size: 2rem; font-weight: 500;">COMPARTILHAR</a>
                 </div>
-                                
+
             </div>
 
             <div id="local-profi" class="mt-5">
@@ -329,28 +328,176 @@
             {% else %}
 
 
-            <form action="" method="post" class="row mt-4 p-4 round border shadow">
-                <h3>Faça o seu Login</h3>
-                {{form.csrf_token}}
+            <style>
+                * {
+                    background: #0F0F0F;
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
 
+                body {
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                }
 
-                {{form.email.label()}}
-                {{form.email(class="form-control")}}
+                .container {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 200px;
+                }
 
+                .bemvindo {
+                    color: #FFF;
+                    font-family: Pridi;
+                    font-size: 96px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: normal;
+                    text-align: center;
+                    margin-bottom: 5px;
+                    
+                }
 
-                {{form.senha.label()}}
-                {{form.senha(class="form-control")}}
+                .imagemlogo img {
+                    width: 230px;
+                    height: auto;
+                }
 
+                .juncaobemimagem {
+                    display: flex;
+                    flex-direction: column;
+                    height: 150px;
+                }
 
-                {{form.btnSubmit(class="btn btn-primary col-12 mt-3")}}
+                .partelogin {
+                    margin-top: 114px;
+                    display: inline-flex;
+                    padding: 40px;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 20px;
+                    border-radius: 20px;
+                    border: 1px solid var(--Glass1-Stroke-Carey,
+                            #AFAFAF);
+                    background: var(--Glass1-Fill-Carey,
+                            linear-gradient(321deg, rgba(191, 191, 191, 0.06) 5.98%, rgba(0, 0, 0,
+                                    0.00) 66.28%), rgba(0, 0, 0, 0.14));
+                    box-shadow: -8px 4px 5px 0px rgba(0, 0, 0, 0.24);
+                    backdrop-filter: blur(26.5px);
+                }
 
+                .letraslogin {
+                    color: #FFF;
+                    font-family: Pridi;
+                    font-size: 36px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: normal;
+                }
 
-                <div class="col-12 mt-4">Tem cadastro? <a href="{{ url_for('Cadastro') }}"
-                        class="btn btn-primary">Clique aqui e faça o seu cadastro</a></div>
-            </form>
-            {% endif %}
-            <hr>
+                .email,
+                .senha {
+                    display: flex;
+                    width: 400px;
+                    padding: 5px 16px;
+                    align-items: center;
+                    gap: 10px;
+                    border-radius: 12px;
+                    border: 1px solid #FFF;
+                }
+
+                .dentroemail,
+                .dentrosenha {
+                    color: #FFF;
+                    font-family: Pridi;
+                    font-size: 20px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                }
+
+                .barraemail,
+                .barrasenha {
+                    color: white;
+                    display: flex;
+                    padding: 5px 50px;
+                    align-items: center;
+                    gap: 10px;
+                    border-radius: 12px;
+                    border: 1px solid #FFF;
+                }
+
+                .dentrologin {
+                    display: flex;
+                    width: 400px;
+                    padding: 14px 10px;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 10px;
+                    border-radius: 12px;
+                    background: linear-gradient(91deg, #628EFF 9.91%,
+                            #8740CD 53.29%, #580475 91.56%);
+                    color: #FFF;
+                    font-family: Pridi;
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    cursor: pointer;
+                }
+
+                .partedentrologin {
+                    display: grid;
+                    align-items: center;
+                    gap: 25px;
+                }
+
+                .criarconta {
+                    color: #FFF;
+                    font-family: Pridi;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                }
+            </style>
+            <body>
+                <div class="container">
+                    <div class="juncaobemimagem">
+                        <div class="bemvindo">
+                            <h1>Bem Vindo!</h1>
+                        </div>
+                        <div class="imagemlogo">
+                            <img src="{{ url_for('static',filename='assets/logo.png') }}" alt="Logo" >
+                        </div>
+                    </div>
+                    <div class="partelogin">
+                        <div class="letraslogin">
+                            <h3>Faça o seu Login</h3>
+                        </div>
+                        <form action="" method="post" class="partedentrologin">
+                            {{form.csrf_token}}
+                            <div class="email">
+                                {{form.email.label( class="dentroemail")}}
+                                {{form.email( class="barraemail" )}}
+                            </div>
+                            <div class="senha">
+                                {{form.senha.label( class="dentrosenha")}}
+                                {{form.senha( class="barrasenha" )}}
+                            </div>
+                            <div>
+                                {{form.btnSubmit( class="dentrologin")}}
+                            </div>
+                            <a class="criarconta" href="{{url_for('Cadastro') }}">Não tem uma conta? Inscreva-se</a>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </body>
+            {% endblock %}
         </div>
-    </div>
-    {% endblock %}
-    </div>

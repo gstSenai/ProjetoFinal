@@ -136,6 +136,8 @@ def filter_posts(profession):
     }
     return render_template('index.html', context=context)
 
+socketio = SocketIO(app,cors_allowed_origins="*")
+
 @app.route('/chat/<int:post_id>')
 @login_required
 def chat(post_id):
@@ -146,27 +148,34 @@ def chat(post_id):
     
     return render_template('chat.html', post=post, messages=messages, users=users)
 
+
 @app.route('/send_message', methods=['POST'])
 @login_required
 def send_message():
     content = request.form.get('message')
     post_id = request.form.get('post_id')
-    post = Post.query.get_or_404(post_id)
+    to_user_id = request.form.get('to_user_id')
     
     if content:
         message = Message(
             from_user_id=current_user.id,
-            to_user_id=post.user_id,
+            to_user_id=to_user_id,
+            post_id=post_id,
             content=content
         )
         db.session.add(message)
         db.session.commit()
-        socketio.emit('receive_message', {'message': content, 'from_user_id': current_user.id}, room=post_id)
+
+        socketio.emit('receive_message', {
+            'message': content,
+            'from_user_id': current_user.id,
+            'from_user_nome': current_user.nome,
+            'to_user_id': to_user_id,
+            'post_id': post_id
+        }, room=post_id)
     
     return jsonify({'success': True})
 
-
-socketio = SocketIO(app,cors_allowed_origins="*")
 
 @socketio.on('connect')
 def on_connect():
@@ -188,21 +197,31 @@ def on_leave(data):
     leave_room(post_id)
     emit('status', {'msg': f'{current_user.nome} saiu do chat.'}, room=post_id)
 
+
+
 @socketio.on('send_message')
 def handle_send_message_event(data):
     post_id = data['post_id']
     content = data['message']
-    
+    to_user_id = data['to_user_id']
+
     message = Message(
         from_user_id=current_user.id,
-        to_user_id=data['to_user_id'],
+        to_user_id=to_user_id,
         post_id=post_id,
         content=content
     )
     db.session.add(message)
     db.session.commit()
-    
-    emit('receive_message', {'message': content, 'from_user_id': current_user.id}, room=post_id)
+
+    emit('receive_message', {
+        'message': content,
+        'from_user_id': current_user.id,
+        'from_user_nome': current_user.nome,
+        'to_user_id': to_user_id
+    }, room=post_id)
+
+
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
