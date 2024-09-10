@@ -158,11 +158,6 @@
         border: 1px solid #e1e8ed;
     }
 
-
-
-
-
-
     .btn-danger {
         background-color: #e0245e;
         border: none;
@@ -173,7 +168,23 @@
         background-color: #c21c4f;
     }
 
+    .btn-primary {
+        transition: background-color 0.3s, transform 0.3s;
+    }
 
+    .btn-primary:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .w-50 {
+        width: 50% !important;
+    }
+
+    .h-150 {
+        height: 80px !important;
+    }
 </style>
 
 
@@ -187,25 +198,31 @@
         <hr>
         {% if current_user.is_authenticated %}
         <div>
-            <div id="local-sidebar" >
-                <div class="">
-                    <img src="{{ url_for('static', filename='assets/user.png') }}" alt="" width="40px" class="bg-white rounded-circle">
-                    <span>{{current_user.nome}} {{current_user.sobrenome}}</spa>
-                    <a href="{{ url_for('profile') }}">
-                        <img src="{{ url_for('static', filename='assets/configuracao.png') }}" alt="" width="30px">
-                    </a>    
+            <div id="local-sidebar" class="row">
+                <div class="d-flex align-items-center gap-3 mb-4 justify-content-between">
+                    <div class="d-flex">
+                        <img src="{{ url_for('static', filename='assets/user.png') }}" alt="User Image" width="80"
+                            class="bg-white rounded-circle">
+                        <div class="d-flex flex-column justify-content-center">
+                            <span class="h4 mb-1">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
+                            <a href="{{ url_for('profile') }}" class="text-decoration-none">
+                                <img src="{{ url_for('static', filename='assets/configuracao.png') }}" alt="Settings"
+                                    width="30">
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('homepage') }}">
+                            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" width="200">
+                        </a>
+                    </div>
                 </div>
-                <div id="local-button-home">
-                    <button id="style-button">
-                        <a href="{{ url_for('PostNovo') }}" id="font-button" class="rem-img">POST FORM</a>
-                    </button>
-                </div>
-                <div id="local-img">
-                    <a href="{{url_for('homepage')}}">
-                    <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="">
-                    </a>
+
+                <div class="mb-4 d-flex justify-content-center">
+                    <a href="{{ url_for('PostNovo') }}" class="btn btn-primary w-50 h-150 pt-4">POST FORM</a>
                 </div>
             </div>
+
             <div id="local-profi" class="mt-5">
                 <div class="style-profi">
                     <a href="{{ url_for('filter_posts', profession='Programador') }}" class="rem-img">
@@ -256,18 +273,22 @@
                                         <p><strong>Cidade:</strong> {{ post.cidade }}</p>
                                     </div>
                                     <div class="post-actions">
-                                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="post" class="d-inline">
+                                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="post"
+                                            class="d-inline">
                                             <button type="submit" class="btn btn-black bg-danger">
-                                                <img src="{{ url_for('static', filename='assets/like.png') }}" class="bg-danger" width="25px"> {{ post.likes_count }}
+                                                <img src="{{ url_for('static', filename='assets/like.png') }}"
+                                                    class="bg-danger" width="25px"> {{ post.likes_count }}
                                             </button>
                                         </form>
                                         {% if post.user_id == current_user.id %}
-                                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post" class="d-inline">
+                                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post"
+                                            class="d-inline">
                                             <button type="submit" class="btn btn-danger text-black">Excluir</button>
                                         </form>
                                         {% endif %}
                                         <a href="{{ url_for('chat', post_id=post.id) }}" class="btn btn-white">
-                                            <img src="{{ url_for('static', filename='assets/messenger.png') }}" width="20px" class="bg-white text-black">
+                                            <img src="{{ url_for('static', filename='assets/messenger.png') }}"
+                                                width="20px" class="bg-white text-black">
                                         </a>
                                     </div>
                                     <div class="post-comments mt-3">
@@ -275,8 +296,10 @@
                                         <ul>
                                             {% for comentario in post.comentarios %}
                                             <li>
-                                                <p><strong>{{ comentario.user.nome }}:</strong> {{ comentario.comentario }}</p>
-                                                <p><small>Postado em: {{ comentario.data_criacao.strftime('%d/%m/%Y') }}</small></p>
+                                                <p><strong>{{ comentario.user.nome }}:</strong> {{ comentario.comentario
+                                                    }}</p>
+                                                <p><small>Postado em: {{ comentario.data_criacao.strftime('%d/%m/%Y')
+                                                        }}</small></p>
                                             </li>
                                             {% else %}
                                             <li>Nenhum comentário ainda.</li>
@@ -284,7 +307,8 @@
                                         </ul>
                                         <form action="{{ url_for('add_comment', post_id=post.id) }}" method="post">
                                             <div class="form-group">
-                                                <textarea name="comentario" class="form-control" placeholder="Adicione um comentário"></textarea>
+                                                <textarea name="comentario" class="form-control"
+                                                    placeholder="Adicione um comentário"></textarea>
                                             </div>
                                             <div class="mt-3">
                                                 <button type="submit" class="btn btn-primary">Comentar</button>
@@ -298,7 +322,7 @@
                     </tbody>
                 </table>
             </div>
-           
+
             {% else %}
 
 
@@ -326,4 +350,4 @@
         </div>
     </div>
     {% endblock %}
-</div>
+    </div>
