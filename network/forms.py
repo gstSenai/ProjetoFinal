@@ -4,6 +4,7 @@ from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from network import db, app, bcrypt
 from network.models import PostComentarios, User, Post
 from flask_login import current_user
+from wtforms.validators import Length
 
 import os
 from werkzeug.utils import secure_filename
@@ -11,22 +12,22 @@ from werkzeug.utils import secure_filename
 class UserForm(FlaskForm):
     nome = StringField('Nome', validators=[DataRequired()])
     sobrenome = StringField('Sobrenome', validators=[DataRequired()])
-    email = StringField('E-mail', validators=[DataRequired(),Email()]) 
-    senha = PasswordField('Senha', validators=[DataRequired()])
-    confirmacao_senha = PasswordField('Confimar senha', validators=[DataRequired(), EqualTo('senha')])
+    email = StringField('E-mail', validators=[DataRequired(), Email()])
+    senha = PasswordField('Senha', validators=[DataRequired(), Length(min=6)])
+    confirmacao_senha = PasswordField('Confirmar senha', validators=[DataRequired(), EqualTo('senha')])
     btnSubmit = SubmitField('Cadastrar')
 
     def validade_email(self, email):
-        if User.query.filter(email=email.data).first():
-            return ValidationError('Usuário já cadastradado com esse E-mail!!!')
+        if User.query.filter_by(email=email.data).first():
+            raise ValidationError('Usuário já cadastrado com esse E-mail!!!')
 
     def save(self):
         senha = bcrypt.generate_password_hash(self.senha.data.encode('utf-8'))
         user = User(
-            nome = self.nome.data,
-            sobrenome = self.sobrenome.data,
-            email = self.email.data,
-            senha = senha
+            nome=self.nome.data,
+            sobrenome=self.sobrenome.data,
+            email=self.email.data,
+            senha=senha
         )
         db.session.add(user)
         db.session.commit()

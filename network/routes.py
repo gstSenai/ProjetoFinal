@@ -134,8 +134,6 @@ def filter_posts(profession):
     context = {
         'dados': filtered_posts
     }
-
-
     return render_template('index.html', context=context)
 
 @app.route('/chat/<int:post_id>')

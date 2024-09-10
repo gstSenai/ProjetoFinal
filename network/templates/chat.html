@@ -90,6 +90,11 @@
     </style>
 </head>
 <body>
+    <div class="mt-5">
+        <button type="button" class="btn btn-primary">
+            <a href="{{ url_for('homepage') }}" class="text-white"><img src="../static/assets/casa.png" alt="" width="50px"></a>
+        </button>
+    </div>
     <div id="chat-container">
         {% for message in messages %}
             <div class="message-container">

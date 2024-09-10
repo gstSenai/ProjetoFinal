@@ -185,6 +185,8 @@
     .h-150 {
         height: 80px !important;
     }
+
+    
 </style>
 
 
@@ -203,7 +205,7 @@
                     <div class="d-flex">
                         <img src="{{ url_for('static', filename='assets/user.png') }}" alt="User Image" width="80"
                             class="bg-white rounded-circle">
-                        <div class="d-flex flex-column justify-content-center">
+                        <div class="d-flex flex-column justify-content-center ">
                             <span class="h4 mb-1">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
                             <a href="{{ url_for('profile') }}" class="text-decoration-none">
                                 <img src="{{ url_for('static', filename='assets/configuracao.png') }}" alt="Settings"
@@ -219,8 +221,9 @@
                 </div>
 
                 <div class="mb-4 d-flex justify-content-center">
-                    <a href="{{ url_for('PostNovo') }}" class="btn btn-primary w-50 h-150 pt-4">POST FORM</a>
+                    <a href="{{ url_for('PostNovo') }}" class="btn btn-primary w-50 h-150 pt-3" style="font-size: 2rem; font-weight: 500;">COMPARTILHAR</a>
                 </div>
+                                
             </div>
 
             <div id="local-profi" class="mt-5">
