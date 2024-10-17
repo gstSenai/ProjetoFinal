@@ -14,17 +14,20 @@ def homepage():
         user = form.login()
         if user:
             login_user(user, remember=True)
-            return redirect(url_for('homepage'))
+            if user.nome == "Administrador":
+                usuarios = User.query.all() 
+                return render_template('admin.html', usuarios=usuarios)
+            else:
+                flash('Você não tem permissão para acessar a página de administração.', 'danger')
+                return redirect(url_for('homepage'))
         else:
             flash('E-mail ou senha inválidos', 'danger')
-
 
     context = {
         'dados': Post.query.all()
     }
-
-
     return render_template('index.html', form=form, context=context)
+
    
 @app.route('/post/novo',methods=['GET', 'POST'])
 @login_required
@@ -250,6 +253,39 @@ def profile():
         form.email.data = current_user.email
 
     return render_template('profile.html', form=form)
+
+
+@app.route('/admin')
+@login_required
+def pagina_admin():
+    usuarios = User.query.all() 
+    return render_template('admin.html', usuarios=usuarios)  
+
+
+@app.route('/usuario/delete/<int:user_id>', methods=['POST'])
+@login_required
+def excluir_usuario(user_id):
+    user = User.query.get_or_404(user_id)  
+    if current_user.email == 'admin@admin.com': 
+        try:
+            for post in user.posts:
+                PostComentarios.query.filter_by(post_id=post.id).delete() 
+
+            Post.query.filter_by(user_id=user.id).delete()
+
+            PostComentarios.query.filter_by(user_id=user.id).delete()
+
+            db.session.delete(user)
+            db.session.commit()
+            flash('Usuário e posts excluídos com sucesso!', 'success')
+        except Exception as e:
+            db.session.rollback()  
+            flash(f'Erro ao excluir o usuário: {str(e)}', 'danger')
+    else:
+        flash('Você não tem permissão para excluir usuários!', 'danger')
+
+    return redirect(url_for('pagina_admin'))
+
 
 
 

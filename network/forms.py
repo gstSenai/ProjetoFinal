@@ -5,6 +5,7 @@ from network import db, app, bcrypt
 from network.models import PostComentarios, User, Post
 from flask_login import current_user
 from wtforms.validators import Length
+from flask import flash;
 
 import os
 from werkzeug.utils import secure_filename

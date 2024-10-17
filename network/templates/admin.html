@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuários</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #000;  /* Fundo preto */
+            color: #fff;  /* Texto branco */
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            background-color: #333;  
+            border-radius: 10px;
+        }
+        th, td {
+            text-align: center;
+            padding: 12px;
+            border-bottom: 1px solid #444;
+        }
+        th {
+            background-color: #444; 
+            color: #fff;
+        }
+        td {
+            color: #ccc; 
+        }
+        .btn-danger {
+            background-color: #ff4c4c; 
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #e60000;  
+        }
+        .table-container {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 900px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista de Usuários</h1>
+
+    <div class="table-container">
+        <table class="table table-dark table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.nome }} {{ usuario.sobrenome }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>
+                        {% if usuario.email != 'admin@admin.com' %}
+                        <form action="{{ url_for('excluir_usuario', user_id=usuario.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');">
+                            <button type="submit" class="btn btn-danger">Excluir</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                    
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">Nenhum usuário encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
