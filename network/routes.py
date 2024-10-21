@@ -5,10 +5,18 @@ from network.forms import PostForm, UserForm, PostComentarioForm, LoginForm
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_socketio import SocketIO,join_room, leave_room, emit,send
 from sqlalchemy.orm import joinedload
+import requests
+
+def get_cidades():
+    response = requests.get('https://servicodados.ibge.gov.br/api/v1/localidades/municipios')
+    return response.json()
 
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
+    if current_user.is_authenticated and current_user.nome == "Administrador":
+        usuarios = User.query.all()  
+        return render_template('admin.html', usuarios=usuarios)
     form = LoginForm()
     if form.validate_on_submit():
         user = form.login()
@@ -22,20 +30,32 @@ def homepage():
                 return redirect(url_for('homepage'))
         else:
             flash('E-mail ou senha inválidos', 'danger')
-
     context = {
         'dados': Post.query.all()
     }
     return render_template('index.html', form=form, context=context)
 
    
-@app.route('/post/novo',methods=['GET', 'POST'])
-@login_required
+@app.route('/post_novo', methods=['GET', 'POST'])
 def PostNovo():
     form = PostForm()
+    
+    if not form.cidade.choices:
+        form.cidade.choices = [(cidade['nome'], cidade['nome']) for cidade in get_cidades()]
+    
     if form.validate_on_submit():
-        form.save()
+        print(f"Mensagem: {form.mensagem.data}, Cidade: {form.cidade.data}, Profissão: {form.profissao.data}")
+        
+        nova_postagem = Post(
+            mensagem=form.mensagem.data,
+            cidade=form.cidade.data,
+            profissao=form.profissao.data,
+            user_id=current_user.id  
+        )
+        db.session.add(nova_postagem)
+        db.session.commit()
         return redirect(url_for('homepage'))
+    
     return render_template('post_novo.html', form=form)
 
 
@@ -265,26 +285,32 @@ def pagina_admin():
 @app.route('/usuario/delete/<int:user_id>', methods=['POST'])
 @login_required
 def excluir_usuario(user_id):
-    user = User.query.get_or_404(user_id)  
+    user = User.query.get_or_404(user_id)
+    
     if current_user.email == 'admin@admin.com': 
         try:
+            Message.query.filter_by(from_user_id=user.id).delete()
+            Message.query.filter_by(to_user_id=user.id).delete()
+
+            UserLikes.query.filter_by(user_id=user.id).delete()
+
             for post in user.posts:
-                PostComentarios.query.filter_by(post_id=post.id).delete() 
-
-            Post.query.filter_by(user_id=user.id).delete()
-
-            PostComentarios.query.filter_by(user_id=user.id).delete()
+                PostComentarios.query.filter_by(post_id=post.id).delete()
+                Post.query.filter_by(id=post.id).delete()
 
             db.session.delete(user)
             db.session.commit()
-            flash('Usuário e posts excluídos com sucesso!', 'success')
+
+            flash('Usuário e seus dados relacionados foram excluídos com sucesso!', 'success')
         except Exception as e:
-            db.session.rollback()  
+            db.session.rollback() 
             flash(f'Erro ao excluir o usuário: {str(e)}', 'danger')
     else:
         flash('Você não tem permissão para excluir usuários!', 'danger')
 
     return redirect(url_for('pagina_admin'))
+
+
 
 
 

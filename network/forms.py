@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, FileField
+from wtforms import StringField, SubmitField, PasswordField, FileField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from network import db, app, bcrypt
 from network.models import PostComentarios, User, Post
@@ -51,15 +51,15 @@ class LoginForm(FlaskForm):
 
 class PostForm(FlaskForm):
     mensagem = StringField('Mensagem:', validators=[DataRequired()])
-    cidade = StringField('Cidade:', validators=[DataRequired()])
+    cidade = SelectField('Cidade:', choices=[], validators=[DataRequired()])
     profissao = StringField('Profissão:', validators=[DataRequired()])
     btnSubmit = SubmitField('Enviar')
 
     def save(self):
         post = Post(
-            mensagem = self.mensagem.data,
-            cidade = self.cidade.data,
-            profissao = self.profissao.data,
+            mensagem=self.mensagem.data,
+            cidade=self.cidade.data,
+            profissao=self.profissao.data,
             user_id=current_user.id
         )
 
