@@ -60,23 +60,5 @@
         </form>
         {% endblock %}
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios')
-                .then(response => response.json())
-                .then(data => {
-                    let cidadeSelect = document.querySelector('select[name="cidade"]');
-                    data.forEach(cidade => {
-                        let option = document.createElement('option');
-                        option.value = cidade.nome;
-                        option.textContent = cidade.nome;
-                        cidadeSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Erro ao carregar as cidades:', error));
-        });
-    </script>
 </body>
-
 </html>
