@@ -12,6 +12,8 @@ class User(db.Model, UserMixin):
     sobrenome = db.Column(db.String, nullable=True)
     email = db.Column(db.String, nullable=True)
     senha = db.Column(db.String, nullable=True)
+    last_login = db.Column(db.DateTime, nullable=True)
+    imagem = db.Column(db.String, nullable=True, default='default.png')
     posts = db.relationship('Post', backref='user', lazy=True)
     post_comentarios = db.relationship('PostComentarios', backref='user', lazy=True)
 
@@ -19,6 +21,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     mensagem = db.Column(db.String, nullable=True)
+    estado = db.Column(db.String, nullable=True)
     cidade = db.Column(db.String, nullable=True)
     profissao = db.Column(db.String, nullable=True)
     imagem = db.Column(db.String, nullable=True, default='default.png')

@@ -6,15 +6,16 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_socketio import SocketIO,join_room, leave_room, emit,send
 from sqlalchemy.orm import joinedload
 import requests
-
-def get_cidades():
-    response = requests.get('https://servicodados.ibge.gov.br/api/v1/localidades/municipios')
+import os
+from werkzeug.utils import secure_filename
+def get_estados():
+    response = requests.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
     return response.json()
 
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
-    if current_user.is_authenticated and current_user.nome == "Administrador":
+    if current_user.is_authenticated and current_user.email == "admin@admin.com":
         usuarios = User.query.all()  
         return render_template('admin.html', usuarios=usuarios)
     form = LoginForm()
@@ -22,7 +23,7 @@ def homepage():
         user = form.login()
         if user:
             login_user(user, remember=True)
-            if user.nome == "Administrador":
+            if user.email == "admin@admin.com":
                 usuarios = User.query.all() 
                 return render_template('admin.html', usuarios=usuarios)
             else:
@@ -39,15 +40,16 @@ def homepage():
 @app.route('/post_novo', methods=['GET', 'POST'])
 def PostNovo():
     form = PostForm()
-    
-    if not form.cidade.choices:
-        form.cidade.choices = [(cidade['nome'], cidade['nome']) for cidade in get_cidades()]
-    
+    if not form.estado.choices:
+        form.estado.choices = [(estado['sigla'], estado['nome']) for estado in get_estados()]
+    if form.estado.data:
+        cidades = get_cidades_por_estado(form.estado.data)
+        form.cidade.choices = [(cidade, cidade) for cidade in cidades]
+
     if form.validate_on_submit():
-        print(f"Mensagem: {form.mensagem.data}, Cidade: {form.cidade.data}, Profissão: {form.profissao.data}")
-        
         nova_postagem = Post(
             mensagem=form.mensagem.data,
+            estado=form.estado.data,
             cidade=form.cidade.data,
             profissao=form.profissao.data,
             user_id=current_user.id  
@@ -55,8 +57,12 @@ def PostNovo():
         db.session.add(nova_postagem)
         db.session.commit()
         return redirect(url_for('homepage'))
-    
     return render_template('post_novo.html', form=form)
+
+def get_cidades_por_estado(estado_sigla):
+    response = requests.get(f'https://servicodados.ibge.gov.br/api/v1/localidades/estados/{estado_sigla}/municipios')
+    cidades = response.json()
+    return [cidade['nome'] for cidade in cidades]
 
 
 @app.route('/post/lista/')
@@ -246,6 +252,8 @@ def handle_send_message_event(data):
 
 
 
+UPLOAD_FOLDER = 'static/assets/'  # Defina o caminho onde deseja armazenar as imagens
+
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -255,6 +263,19 @@ def profile():
         current_user.nome = form.nome.data
         current_user.sobrenome = form.sobrenome.data
         current_user.email = form.email.data
+
+        # Verifica se o campo de imagem foi preenchido
+        if form.imagem_perfil.data:
+            imagem = form.imagem_perfil.data
+            filename = secure_filename(imagem.filename)
+            caminho_imagem = os.path.join(UPLOAD_FOLDER, filename)
+
+            # Verifica se o diretório de upload existe, caso contrário, cria
+            if not os.path.exists(UPLOAD_FOLDER):
+                os.makedirs(UPLOAD_FOLDER)
+
+            imagem.save(caminho_imagem)
+            current_user.imagem_perfil = caminho_imagem
 
         if form.senha.data:
             if form.senha.data == form.confirmacao_senha.data:
@@ -273,6 +294,7 @@ def profile():
         form.email.data = current_user.email
 
     return render_template('profile.html', form=form)
+
 
 
 @app.route('/admin')

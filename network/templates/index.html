@@ -113,7 +113,6 @@
 
 
     .post-container {
-        background-color: #f5f8fa;
         border: 1px solid #e1e8ed;
         border-radius: 10px;
         padding: 15px;
@@ -185,6 +184,21 @@
     .h-150 {
         height: 80px !important;
     }
+
+    td{
+        background-color: #0F0F0F;
+    }
+
+    .divisoria{
+        width: 50%;
+        height: 1.5rem;
+        border-radius: 2rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        display: flex;
+        
+    }
+    
 </style>
 
 
@@ -201,16 +215,15 @@
             <div id="local-sidebar" class="row">
                 <div class="d-flex align-items-center gap-3 mb-4 justify-content-between">
                     <div class="d-flex">
-                        <img src="{{ url_for('static', filename='assets/user.png') }}" alt="User Image" width="80"
-                            class="bg-white rounded-circle">
-                        <div class="d-flex flex-column justify-content-center ">
+                        <img src="{{ current_user.imagem_perfil if current_user.imagem_perfil else url_for('static', filename='default.png') }}" alt="Foto do Perfil">
+                        <div class="d-flex flex-column justify-content-center ms-3">
                             <span class="h4 mb-1">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
                             <a href="{{ url_for('profile') }}" class="text-decoration-none">
-                                <img src="{{ url_for('static', filename='assets/configuracao.png') }}" alt="Settings"
-                                    width="30">
+                                <img src="{{ url_for('static', filename='assets/configuracao.png') }}" alt="Settings" width="30">
                             </a>
                         </div>
                     </div>
+                    
                     <div>
                         <a href="{{ url_for('homepage') }}">
                             <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" width="200">
@@ -259,11 +272,11 @@
             </div>
             <div class="container mt-4">
                 <h1 class="mb-4">Postagens</h1>
-                <table class="table table-separator">
                     <tbody>
                         {% for post in context['dados'] %}
-                        <tr class="post-row ">
-                            <td colspan="5">
+                        
+                        <tr class="post-row">
+                            <td colspan="">
                                 <div class="post-container bg-black">
                                     <div class="post-header">
                                         <span class="post-username text-white">{{ post.user.nome }}</span>
@@ -272,6 +285,7 @@
                                     <div class="post-content">
                                         <p>{{ post.mensagem }}</p>
                                         <p><strong>Profissão:</strong> {{ post.profissao }}</p>
+                                        <p><strong>Estado:</strong> {{ post.estado }}</p>
                                         <p><strong>Cidade:</strong> {{ post.cidade }}</p>
                                     </div>
                                     <div class="post-actions">
@@ -320,9 +334,10 @@
                                 </div>
                             </td>
                         </tr>
+                        <div class="bg-secondary divisoria">
+                        </div>
                         {% endfor %}
                     </tbody>
-                </table>
             </div>
 
             {% else %}

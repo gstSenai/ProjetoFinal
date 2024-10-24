@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, FileField, SelectField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from network import db, app, bcrypt
 from network.models import PostComentarios, User, Post
 from flask_login import current_user
-from wtforms.validators import Length
-from flask import flash;
+from flask import flash
+from flask_wtf.file import FileAllowed
+
 
 import os
 from werkzeug.utils import secure_filename
@@ -15,6 +16,7 @@ class UserForm(FlaskForm):
     sobrenome = StringField('Sobrenome', validators=[DataRequired()])
     email = StringField('E-mail', validators=[DataRequired(), Email()])
     senha = PasswordField('Senha', validators=[DataRequired(), Length(min=6)])
+    imagem_perfil = FileField('Imagem de Perfil', validators=[FileAllowed(['jpg', 'png'], 'Apenas imagens são permitidas.')])
     confirmacao_senha = PasswordField('Confirmar senha', validators=[DataRequired(), EqualTo('senha')])
     btnSubmit = SubmitField('Cadastrar')
 
@@ -28,7 +30,8 @@ class UserForm(FlaskForm):
             nome=self.nome.data,
             sobrenome=self.sobrenome.data,
             email=self.email.data,
-            senha=senha
+            senha=senha,
+            imagem_perfil=self.imagem_perfil.data
         )
         db.session.add(user)
         db.session.commit()
@@ -51,20 +54,30 @@ class LoginForm(FlaskForm):
 
 class PostForm(FlaskForm):
     mensagem = StringField('Mensagem:', validators=[DataRequired()])
+    estado = SelectField('Estado:', choices=[], validators=[DataRequired()])
     cidade = SelectField('Cidade:', choices=[], validators=[DataRequired()])
     profissao = StringField('Profissão:', validators=[DataRequired()])
     btnSubmit = SubmitField('Enviar')
 
     def save(self):
-        post = Post(
-            mensagem=self.mensagem.data,
-            cidade=self.cidade.data,
-            profissao=self.profissao.data,
-            user_id=current_user.id
-        )
-
-        db.session.add(post)
-        db.session.commit()
+        try:
+            post = Post(
+                mensagem=self.mensagem.data,
+                estado=self.estado.data,
+                cidade=self.cidade.data,
+                profissao=self.profissao.data,
+                user_id=current_user.id  
+            )
+            
+            db.session.add(post)
+            db.session.commit()
+            print(f"Post {post.id} salvo com sucesso!")  
+            return post
+        
+        except Exception as e:
+            db.session.rollback() 
+            print(f"Erro ao salvar o post: {e}")
+            raise
 
 class PostComentarioForm(FlaskForm):
      comentario = StringField('Comentario', validators=[DataRequired()])

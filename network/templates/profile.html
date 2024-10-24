@@ -28,7 +28,6 @@
         .profile-header h1 {
             margin: 0;
             font-size: 24px;
-
         }
 
         .profile-header p {
@@ -89,15 +88,14 @@
 <body>
     <div class="container mt-5">
         <div class="profile-header">
-            <img src="{{ url_for('static', filename='assets/user2.png') }}" alt="Foto do Perfil">
+            <img src="{{ current_user.imagem_perfil if current_user.imagem_perfil else url_for('static', filename='default.png') }}" alt="Foto do Perfil">
             <div>
                 <h1>{{ current_user.nome }} {{ current_user.sobrenome }}</h1>
                 <p class="text-white">{{ current_user.email }}</p>
                 <div class="row d-flex align-items-center gap-3">
                     <div class="pt-3">
                         <a href="{{ url_for('homepage') }}" class="btn-home d-flex align-items-center">
-                            <img src="{{ url_for('static', filename='assets/casa2.png') }}" alt="Home" id="teste-img"
-                                class="me-2">
+                            <img src="{{ url_for('static', filename='assets/casa2.png') }}" alt="Home" id="teste-img" class="me-2">
                             Home
                         </a>
                     </div>
@@ -130,6 +128,11 @@
             <div class="form-group">
                 <label for="confirmacao_senha">Confirmar Senha</label>
                 {{ form.confirmacao_senha(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="imagem_perfil">Imagem de Perfil</label>
+                {{ form.imagem_perfil(class="form-control-file") }}
+                <small class="form-text">Formato permitido: jpg, png.</small>
             </div>
             <div class="form-group">
                 {{ form.btnSubmit(class="btn btn-primary") }}
