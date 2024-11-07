@@ -1,67 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .container {
-            max-width: 600px;
-            margin-top: 50px;
-        }
-        
-        .form-container {
-            background-color: #000; 
-            border: 1px solid #333; 
-            padding: 20px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-        }
-        
-        .form-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .form-header img {
-            max-width: 150px; 
-            margin-bottom: 20px; 
-        }
-
-        .form-header h3 {
-            color: #fff; 
-        }
-
-        .form-label {
-            color: #fff; 
-        }
-        
-        .form-control {
-            background-color: #333; 
-            color: #fff; 
-            border: 1px solid #555; 
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
-        }
-
-        .btn-custom {
-            background-color: #007bff; 
-            color: #fff;
-            border: none; 
-            border-radius: 5px; 
-            padding: 10px 20px;
-            font-size: 16px; 
-        }
-        
-        .btn-custom:hover {
-            background-color: #0056b3; 
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styleCadastro.css') }}">
 </head>
+
 <body>
     <div class="container">
         <div class="form-container">
@@ -106,4 +53,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

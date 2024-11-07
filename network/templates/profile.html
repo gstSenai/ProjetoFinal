@@ -5,137 +5,53 @@
     <meta charset="UTF-8">
     <title>Perfil</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #0F0F0F;
-            color: white;
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .profile-header img {
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            margin-right: 20px;
-            object-fit: cover;
-        }
-
-        .profile-header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .profile-header p {
-            font-size: 16px;
-        }
-
-        .profile-header .btn {
-            margin-top: 10px;
-            margin-right: 10px;
-        }
-
-        .btn-home {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 10px 20px;
-            font-size: 16px;
-            text-transform: uppercase;
-            display: inline-block;
-            text-align: center;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-home:hover {
-            color: white;
-            background-color: #0056b3;
-        }
-
-        .btn-home:focus,
-        .btn-home:active {
-            outline: none;
-            box-shadow: none;
-        }
-
-        #teste-img {
-            height: 2rem;
-            width: 2rem;
-        }
-
-        .form-group label {
-            font-weight: bold;
-        }
-
-        .form-text {
-            color: #6c757d;
-        }
-
-        .form-control-file {
-            border: 1px solid #ced4da;
-            border-radius: .25rem;
-            padding: .375rem .75rem;
-            height: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styleProfile.css') }}">
 </head>
 
 <body>
-    <div class="container mt-5">
+    <div class="container">
         <div class="profile-header">
-            <img src="{{ current_user.imagem_perfil if current_user.imagem_perfil else url_for('static', filename='default.png') }}" alt="Foto do Perfil">
+            <img src="{{ current_user.imagem_perfil if current_user.imagem_perfil else url_for('static', filename='default.png') }}"
+                alt="Foto do Perfil">
             <div>
                 <h1>{{ current_user.nome }} {{ current_user.sobrenome }}</h1>
-                <p class="text-white">{{ current_user.email }}</p>
-                <div class="row d-flex align-items-center gap-3">
-                    <div class="pt-3">
-                        <a href="{{ url_for('homepage') }}" class="btn-home d-flex align-items-center">
-                            <img src="{{ url_for('static', filename='assets/casa2.png') }}" alt="Home" id="teste-img" class="me-2">
-                            Home
-                        </a>
-                    </div>
-                    <div class="mt-2 pl-2">
-                        <a href="{{ url_for('logout') }}" class="btn btn-danger">Sair</a>
-                    </div>
+                <p>{{ current_user.email }}</p>
+                <div class="d-flex mt-3">
+                    <a href="{{ url_for('homepage') }}" class="btn-home">
+                        <img src="{{ url_for('static', filename='assets/casa2.png') }}" alt="Home" id="teste-img">
+                        <span>Home</span>
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-danger ml-3">Sair</a>
                 </div>
             </div>
         </div>
 
-        <h2>Editar Perfil</h2>
+        <h2 class="text-center mb-4">Editar Perfil</h2>
         <form method="POST" action="{{ url_for('profile') }}" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="nome">Nome</label>
                 {{ form.nome(class="form-control") }}
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="sobrenome">Sobrenome</label>
                 {{ form.sobrenome(class="form-control") }}
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="email">E-mail</label>
                 {{ form.email(class="form-control") }}
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="senha">Senha</label>
                 {{ form.senha(class="form-control") }}
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="confirmacao_senha">Confirmar Senha</label>
                 {{ form.confirmacao_senha(class="form-control") }}
             </div>
+
             <div class="form-group">
-                <label for="imagem_perfil">Imagem de Perfil</label>
-                {{ form.imagem_perfil(class="form-control-file") }}
-                <small class="form-text">Formato permitido: jpg, png.</small>
-            </div>
-            <div class="form-group">
-                {{ form.btnSubmit(class="btn btn-primary") }}
+                {{ form.btnSubmit(class="btn btn-primary btn-block col-12 mt-3") }}
             </div>
         </form>
     </div>

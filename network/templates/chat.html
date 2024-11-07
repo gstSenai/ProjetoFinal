@@ -132,19 +132,15 @@
                     <a href="{{ url_for('homepage') }}" class="text-white"><img src="../static/assets/casa.png" alt="" width="50px"></a>
                 </button>
             </div>
-            {% for message in messages %}
-                <div class="message-container">
-                    <p class="message {% if message.from_user.id == current_user.id %}from-me{% else %}from-others{% endif %}">
-                        <strong>{{ message.from_user.nome }}:</strong> {{ message.content }}
-                    </p>
-                </div>
-            {% endfor %}
+            <div id="messages-area"></div>
         </div>
         <div id="sidebar">
             <div class="sidebar-header">Usuários</div>
             <ul class="user-list">
                 {% for user in users %}
-                    <li onclick="selectUser({{ user.id }})">{{ user.nome }}</li>
+                    {% if user.id != current_user.id %}
+                        <li onclick="selectUser({{ user.id }}, '{{ user.nome }}')">{{ user.nome }}</li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>
@@ -161,50 +157,58 @@
         const socket = io.connect('http://' + document.domain + ':' + location.port);
         const post_id = document.getElementById('post_id').value;
         const selectedUserIdInput = document.getElementById('selected_user_id');
+        const messagesArea = document.getElementById('messages-area');
 
         function scrollToBottom() {
-            const chatContainer = document.getElementById('chat-container');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            messagesArea.scrollTop = messagesArea.scrollHeight;
         }
 
-        function selectUser(userId) {
+        function selectUser(userId, userName) {
             selectedUserIdInput.value = userId;
-            const chatContainer = document.getElementById('chat-container');
-            chatContainer.innerHTML = ''; 
+            messagesArea.innerHTML = ''; // Limpa as mensagens ao selecionar um usuário
             socket.emit('load_messages', {post_id: post_id, user_id: userId});
+            document.getElementById('chat-form').onsubmit = function(event) {
+                event.preventDefault();
+                const message = document.getElementById('message').value;
+                socket.emit('send_message', {message: message, post_id: post_id, to_user_id: userId});
+                document.getElementById('message').value = '';
+                scrollToBottom();
+            };
         }
 
         socket.on('connect', function() {
             socket.emit('join', {post_id: post_id});
         });
 
-        document.getElementById('chat-form').onsubmit = function(event) {
-            event.preventDefault();
-            const message = document.getElementById('message').value;
-            const toUserId = selectedUserIdInput.value;
-            socket.emit('send_message', {message: message, post_id: post_id, to_user_id: toUserId});
-            document.getElementById('message').value = '';
-            scrollToBottom();
-        };
-
-        socket.on('receive_message', function(data) {
-            if (data.to_user_id === parseInt(selectedUserIdInput.value) || data.from_user_id === parseInt(selectedUserIdInput.value)) {
-                const chatContainer = document.getElementById('chat-container');
+        socket.on('load_messages', function(messages) {
+            messagesArea.innerHTML = ''; // Limpa as mensagens anteriores
+            messages.forEach(data => {
                 const newMessage = document.createElement('div');
                 newMessage.className = 'message-container';
                 newMessage.innerHTML = `<p class="message ${data.from_user_id === {{ current_user.id }} ? 'from-me' : 'from-others'}">
                     <strong>${data.from_user_nome}:</strong> ${data.message}
                 </p>`;
-                chatContainer.appendChild(newMessage);
+                messagesArea.appendChild(newMessage);
+            });
+            scrollToBottom();
+        });
+
+        socket.on('receive_message', function(data) {
+            if (data.to_user_id === parseInt(selectedUserIdInput.value) || data.from_user_id === parseInt(selectedUserIdInput.value)) {
+                const newMessage = document.createElement('div');
+                newMessage.className = 'message-container';
+                newMessage.innerHTML = `<p class="message ${data.from_user_id === {{ current_user.id }} ? 'from-me' : 'from-others'}">
+                    <strong>${data.from_user_nome}:</strong> ${data.message}
+                </p>`;
+                messagesArea.appendChild(newMessage);
                 scrollToBottom();
             }
         });
 
         socket.on('status', function(data) {
-            const chatContainer = document.getElementById('chat-container');
             const statusMessage = document.createElement('p');
             statusMessage.innerHTML = `<em>${data.msg}</em>`;
-            chatContainer.appendChild(statusMessage);
+            messagesArea.appendChild(statusMessage);
             scrollToBottom();
         });
     </script>

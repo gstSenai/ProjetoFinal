@@ -252,7 +252,7 @@ def handle_send_message_event(data):
 
 
 
-UPLOAD_FOLDER = 'static/assets/'  # Defina o caminho onde deseja armazenar as imagens
+UPLOAD_FOLDER = 'static/assets/' 
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -264,18 +264,6 @@ def profile():
         current_user.sobrenome = form.sobrenome.data
         current_user.email = form.email.data
 
-        # Verifica se o campo de imagem foi preenchido
-        if form.imagem_perfil.data:
-            imagem = form.imagem_perfil.data
-            filename = secure_filename(imagem.filename)
-            caminho_imagem = os.path.join(UPLOAD_FOLDER, filename)
-
-            # Verifica se o diretório de upload existe, caso contrário, cria
-            if not os.path.exists(UPLOAD_FOLDER):
-                os.makedirs(UPLOAD_FOLDER)
-
-            imagem.save(caminho_imagem)
-            current_user.imagem_perfil = caminho_imagem
 
         if form.senha.data:
             if form.senha.data == form.confirmacao_senha.data:
@@ -331,6 +319,8 @@ def excluir_usuario(user_id):
         flash('Você não tem permissão para excluir usuários!', 'danger')
 
     return redirect(url_for('pagina_admin'))
+
+
 
 
 

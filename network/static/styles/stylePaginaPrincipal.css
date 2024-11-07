@@ -1,0 +1,183 @@
+* {
+    padding: 0;
+    margin: 0;
+    background-color: #0F0F0F;
+    color: white;
+}
+
+
+#salve-pls {
+    height: 100%;
+}
+
+
+#style-button {
+    border-radius: 20px;
+    border: none;
+    background: linear-gradient(90deg, #FFDE59 0%, #FF914D 100%);
+    padding: 5px 3rem 0 3rem;
+    height: 3rem;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+
+#style-button:hover {
+    background-color: #0056b3;
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+#font-button {
+    text-decoration: none;
+    color: #0F0F0F;
+    font-family: "Pridi", serif;
+}
+
+
+#local-sidebar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+#local-img {
+    margin-left: 5rem;
+    margin-top: -3rem;
+}
+
+
+.style-profi {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(180deg, #3533CD 0%, #D2D2DB 100%);
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#local-profi {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    justify-content: center;
+
+
+}
+
+
+#local-login-cad {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    justify-content: center;
+    color: white;
+    margin-top: 2rem;
+}
+
+
+.style-login {
+    all: unset;
+}
+
+
+.rem-img {
+    background-color: transparent;
+}
+
+
+.post-row {
+    margin-bottom: 15px;
+}
+
+
+.post-container {
+    border: 1px solid #e1e8ed;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #657786;
+}
+
+
+.post-username {
+    font-weight: bold;
+    color: #14171a;
+}
+
+
+.post-date {
+    color: #657786;
+}
+
+
+.post-content {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.post-actions .btn {
+    background-color: #ffffff;
+    border: 1px solid #e1e8ed;
+}
+
+.btn-danger {
+    background-color: #e0245e;
+    border: none;
+}
+
+
+.btn-danger:hover {
+    background-color: #c21c4f;
+}
+
+.btn-primary {
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.w-50 {
+    width: 50% !important;
+}
+
+.h-150 {
+    height: 80px !important;
+}
+
+td {
+    background-color: #0F0F0F;
+}
+
+.divisoria {
+    width: 50%;
+    height: 1.5rem;
+    border-radius: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+
+}

@@ -16,7 +16,6 @@ class UserForm(FlaskForm):
     sobrenome = StringField('Sobrenome', validators=[DataRequired()])
     email = StringField('E-mail', validators=[DataRequired(), Email()])
     senha = PasswordField('Senha', validators=[DataRequired(), Length(min=6)])
-    imagem_perfil = FileField('Imagem de Perfil', validators=[FileAllowed(['jpg', 'png'], 'Apenas imagens são permitidas.')])
     confirmacao_senha = PasswordField('Confirmar senha', validators=[DataRequired(), EqualTo('senha')])
     btnSubmit = SubmitField('Cadastrar')
 
@@ -31,7 +30,6 @@ class UserForm(FlaskForm):
             sobrenome=self.sobrenome.data,
             email=self.email.data,
             senha=senha,
-            imagem_perfil=self.imagem_perfil.data
         )
         db.session.add(user)
         db.session.commit()
