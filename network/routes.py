@@ -36,6 +36,13 @@ def homepage():
     }
     return render_template('index.html', form=form, context=context)
 
+@app.route('/postagens')
+@login_required
+def postagens():
+    dados = Post.query.all()
+    context = {'dados': dados}
+    return render_template('posts.html', context=context)
+
    
 @app.route('/post_novo', methods=['GET', 'POST'])
 def PostNovo():

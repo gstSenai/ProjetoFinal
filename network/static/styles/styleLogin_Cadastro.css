@@ -45,7 +45,7 @@ body {
 .partelogin {
     width: 90%; 
     max-width: 500px; 
-    margin-top: 100px;
+    margin-top: 125px;
     display: inline-flex;
     padding: 20px;
     flex-direction: column;
@@ -54,7 +54,6 @@ body {
     gap: 20px;
     border-radius: 20px;
     border: 1px solid var(--Glass1-Stroke-Carey, #AFAFAF);
-    background: var(--Glass1-Fill-Carey, linear-gradient(321deg, rgba(191, 191, 191, 0.06) 5.98%, rgba(0, 0, 0, 0.00) 66.28%), rgba(0, 0, 0, 0.14));
     box-shadow: -8px 4px 5px 0px rgba(0, 0, 0, 0.24);
     backdrop-filter: blur(26.5px);
 }
@@ -83,7 +82,7 @@ body {
     font-family: Pridi;
     font-size: 15px;
     font-style: normal;
-    font-weight: 800;
+    font-weight: 500;
     line-height: normal;
     width: 125px;
 }

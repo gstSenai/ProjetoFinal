@@ -1,0 +1,152 @@
+body {
+    font-family: 'Pridi', sans-serif;
+    color: #fff;
+    background-color: #000; 
+    margin: 0; 
+    padding: 0;
+}
+
+.container-post {
+    background-color: #000;
+    padding: 20px;
+}
+
+.navbar {
+    background-color: #343a40;
+}
+
+.navbar-brand img {
+    max-width: 80px;
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.navbar .btn-outline-light {
+    margin-left: 10px;
+}
+
+.d-flex.align-items-center span {
+    font-weight: bold;
+    color: #f8f9fa;
+    margin-right: 10px;
+}
+
+#local-profi {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.style-profi {
+    width: 70px;
+}
+
+.style-profi img {
+    transition: transform 0.3s;
+}
+
+.style-profi img:hover {
+    transform: scale(1.1);
+}
+
+.container h1 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.post-container {
+    background-color: #1a1a1a; /* Fundo mais escuro para os posts */
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.post-content p {
+    margin: 5px 0;
+    color: #fff;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.post-actions .btn {
+    display: inline-flex;
+    align-items: center;
+}
+
+.post-comments ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.post-comments li {
+    background-color: #333;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 5px;
+    color: #fff;
+}
+
+.post-comments form textarea {
+    resize: none;
+    min-height: 60px;
+}
+
+.post-comments .form-group {
+    margin-top: 10px;
+}
+
+.modal-header, .modal-footer {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.modal-header .close {
+    color: #ffffff;
+    opacity: 1;
+}
+
+.rem-img {
+    background-color: transparent;
+}
+
+.style-profi {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(180deg, #3533CD 0%, #D2D2DB 100%);
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+@media (max-width: 768px) {
+    .navbar-nav {
+        margin-top: 10px;
+    }
+    .post-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    #local-profi {
+        display: none;
+    }
+}
