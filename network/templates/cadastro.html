@@ -6,49 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styleCadastro.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styleLogin_Cadastro.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pridi:wght@200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
-        <div class="form-container">
-            <div class="form-header">
-                <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="" width="230">
-                <h3>Cadastro de Usuário</h3>
+    <div class="container-login">
+        <div class="juncaobemimagem">
+            <div class="bemvindo">
+                <h1>Bem Vindo!</h1>
             </div>
-            <form action="" method="post">
-                {{ form.csrf_token }}
-
-                <div class="form-group">
-                    {{ form.nome.label(class="form-label") }}
-                    {{ form.nome(class="form-control") }}
+            <div class="imagemlogo">
+                <img src="{{ url_for('static',filename='assets/logo.png') }}" alt="Logo">
+            </div>
+        </div>
+        <div class="partelogin">
+            <div class="letraslogin">
+                <h3>Faça o seu Cadastro</h3>
+            </div>
+            <form action="" method="post" class="partedentrologin">
+                {{form.csrf_token}}
+                <div class="email">
+                    {{form.nome.label( class="dentroemail")}}
+                    {{form.nome( class="barraemail" )}}
                 </div>
-
-                <div class="form-group">
-                    {{ form.sobrenome.label(class="form-label") }}
-                    {{ form.sobrenome(class="form-control") }}
+                <div class="email">
+                    {{form.sobrenome.label( class="dentroemail")}}
+                    {{form.sobrenome( class="barraemail" )}}
                 </div>
-
-                <div class="form-group">
-                    {{ form.email.label(class="form-label") }}
-                    {{ form.email(class="form-control") }}
+                <div class="email">
+                    {{form.email.label( class="dentroemail")}}
+                    {{form.email( class="barraemail" )}}
                 </div>
-
-                <div class="form-group">
-                    {{ form.senha.label(class="form-label") }}
-                    {{ form.senha(class="form-control") }}
+                <div class="senha">
+                    {{form.senha.label( class="dentrosenha")}}
+                    {{form.senha( class="barrasenha" )}}
                 </div>
-
-                <div class="form-group">
-                    {{ form.confirmacao_senha.label(class="form-label") }}
-                    {{ form.confirmacao_senha(class="form-control") }}
+                <div class="senha">
+                    {{form.confirmacao_senha.label( class="dentrosenha")}}
+                    {{form.confirmacao_senha( class="barrasenha" )}}
                 </div>
-
-                <button type="submit" class="btn btn-custom btn-block">Cadastrar</button>
+                <div>
+                    {{form.btnSubmit( class="dentrologin")}}
+                </div>
             </form>
         </div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
