@@ -14,27 +14,31 @@ def get_estados():
 
 
 @app.route('/', methods=['GET', 'POST'])
-def homepage():
-    if current_user.is_authenticated and current_user.email == "admin@admin.com":
-        usuarios = User.query.all()  
-        return render_template('admin.html', usuarios=usuarios)
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('homepage'))
     form = LoginForm()
     if form.validate_on_submit():
         user = form.login()
         if user:
             login_user(user, remember=True)
             if user.email == "admin@admin.com":
-                usuarios = User.query.all() 
-                return render_template('admin.html', usuarios=usuarios)
-            else:
-                flash('Você não tem permissão para acessar a página de administração.', 'danger')
-                return redirect(url_for('homepage'))
+                return redirect(url_for('pagina_admin'))
+            return redirect(url_for('homepage'))
         else:
             flash('E-mail ou senha inválidos', 'danger')
+    return render_template('login.html', form=form)
+
+
+@app.route('/home', methods=['GET'])
+@login_required
+def homepage():
+    if current_user.email == "admin@admin.com":
+        return redirect(url_for('pagina_admin'))
     context = {
         'dados': Post.query.all()
     }
-    return render_template('index.html', form=form, context=context)
+    return render_template('home.html', context=context)
 
 @app.route('/postagens')
 @login_required

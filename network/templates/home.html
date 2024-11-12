@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Página Principal{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/stylePaginaPrincipal.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="{{ url_for('homepage') }}">
+            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('postagens') }}">Postagens</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('homepage') }}">Chat</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('homepage') }}">Histórico</a>
+                </li>
+            </ul>
+        </div>
+        <div class="d-flex align-items-center bg-paginaPri">
+            <span class="text-white mr-3 teste">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
+            <a href="{{ url_for('profile') }}" class="text-decoration-none mr-3">
+                <img src="{{ url_for('static', filename='assets/configuracao.png') }}" alt="Settings" width="30">
+            </a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-light">Logout</a>
+        </div>
+    </nav>
+</header>
+
+<section>
+    <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" class="imagemLogo-pagPrin">
+    <div class="descricao">
+        <p>Bem Vindo a GP! Somos uma empresa que foca em <br> trazer novas experiências para quem procura pessoas <br>qualificadas no mercado para contratar para sua empresa</p>
+    </div>
+    <a href="{{ url_for('PostNovo') }}" class="btn-post text-decoration-none">Faça seu primeiro post</a>
+</section>
+
+<section class="about">
+    <h2>Sobre Nós</h2>
+    <p>Somos uma empresa de desenvolvimento de Software, <br> que foca no mais no ambito profissional</p>
+</section>
+
+<section class="partners">
+    <h2>Nossos Sócios</h2>
+    <div class="partners-images">
+        <div class="partner">
+            <img src="{{ url_for('static', filename='assets/socio.jpg') }}" alt="Sócio 1" class="partner-img rounded-circle">
+            <p>Nome do Sócio 1</p>
+            <p>Função: CEO</p>
+        </div>
+        <div class="partner">
+            <img src="{{ url_for('static', filename='assets/socio.jpg') }}" alt="Sócio 2" class="partner-img rounded-circle">
+            <p>Nome do Sócio 2</p>
+            <p>Função: CTO</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <div class="company-info">
+            <h3>Empresa GP</h3>
+            <p>Contato: gp@gmail.com</p>
+        </div>
+
+        <div class="social-links">
+            <a href="https://facebook.com" target="_blank" class="social-icon">
+                <i class="fab fa-facebook"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" class="social-icon">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="social-icon">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://linkedin.com" target="_blank" class="social-icon">
+                <i class="fab fa-linkedin"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer-logo"></div>
+
+    <p>&copy; 2024 Empresa GP - Todos os direitos reservados</p>
+</footer>
+
+{% endblock %}
