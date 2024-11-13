@@ -9,20 +9,6 @@
     background-color: #343a40;
 }
 
-.navbar-brand img {
-    max-width: 100px;
-}
-
-.navbar-nav .nav-link {
-    color: #ffffff;
-    background-color: #343a40;
-}
-
-.navbar .btn-outline-light {
-    margin-left: 10px;
-}
-
-
 body {
     background-color: #0F0F0F;
     display: flex;
@@ -37,19 +23,6 @@ body {
 header {
     padding: 1rem 0;
     background-color: #343a40;
-}
-
-.navbar-nav .nav-link {
-    color: #ffffff;
-    background-color: #343a40;
-}
-
-.navbar .btn-outline-light {
-    margin-left: 10px;
-}
-
-.navbar-brand img {
-    max-width: 100px;
 }
 
 section {

@@ -68,7 +68,9 @@ def PostNovo():
         db.session.add(nova_postagem)
         db.session.commit()
         return redirect(url_for('homepage'))
-    return render_template('post_novo.html', form=form)
+    dados = Post.query.order_by('cidade').all()
+    context = {'dados': dados}
+    return render_template('post_novo.html', form=form, context=context)
 
 def get_cidades_por_estado(estado_sigla):
     response = requests.get(f'https://servicodados.ibge.gov.br/api/v1/localidades/estados/{estado_sigla}/municipios')
@@ -188,10 +190,11 @@ socketio = SocketIO(app,cors_allowed_origins="*")
 def chat(post_id):
     post = Post.query.get_or_404(post_id)
     messages = Message.query.filter_by(post_id=post_id).order_by(Message.timestamp.asc()).all()
-
     users = User.query.all()
+    dados = Post.query.order_by('cidade').all()
+    context = {'dados': dados}
+    return render_template('chat.html', post=post, messages=messages, users=users, context=context)
 
-    return render_template('chat.html', post=post, messages=messages, users=users)
 
 from collections import defaultdict
 
@@ -304,8 +307,9 @@ def profile():
         form.nome.data = current_user.nome
         form.sobrenome.data = current_user.sobrenome
         form.email.data = current_user.email
-
-    return render_template('profile.html', form=form)
+    dados = Post.query.order_by('cidade').all()
+    context = {'dados': dados}
+    return render_template('profile.html', form=form, context=context)
 
 
 

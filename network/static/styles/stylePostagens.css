@@ -11,25 +11,7 @@ body {
     padding: 20px;
 }
 
-.navbar {
-    background-color: #343a40;
-}
-
-.navbar-brand img {
-    max-width: 80px;
-}
-
-.navbar-nav .nav-link {
-    color: #ffffff;
-    font-weight: 500;
-}
-
-.navbar .btn-outline-light {
-    margin-left: 10px;
-}
-
 .d-flex.align-items-center span {
-    font-weight: bold;
     color: #f8f9fa;
     margin-right: 10px;
 }

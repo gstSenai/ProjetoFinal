@@ -1,0 +1,138 @@
+header {
+    background-color: #343a40; 
+    padding: 10px 20px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand img {
+    height: 85px;
+}
+
+.navbar-nav .nav-link {
+    color: white;
+    font-weight: bold;
+    margin-right: 15px;
+    transition: color 0.3s;
+}
+
+.nav-link a{
+    color: white;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffc107;
+}
+
+.navbar-toggler {
+    border-color: #fff;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.navbar-collapse {
+    text-align: center;
+}
+
+.d-flex {
+    margin-left: auto; 
+    align-items: center;
+}
+
+.text-white {
+    font-size: 1.1rem;
+    margin-right: 10px;
+}
+
+a.text-decoration-none img {
+    border-radius: 50%;
+    background-color: #fff;
+    padding: 3px;
+}
+
+a.text-decoration-none img:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.btn-outline-light {
+    border-color: #ffc107;
+    color: #ffc107;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-outline-light:hover {
+    background-color: #ffc107;
+    color: #343a40;
+}
+
+.dropdown-toggle {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-menu {
+    background-color: #343a40;
+    border: none;
+    border-radius: 5px;
+    min-width: 150px;
+    max-width: 200px; 
+    word-wrap: break-word;
+}
+
+.dropdown-menu .dropdown-item {
+    color: white;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #ffc107;
+    color: #343a40;
+}
+
+.dropdown-divider {
+    border-color: #6c757d;
+}
+
+@media (max-width: 768px) {
+    .navbar-nav .nav-link {
+        font-size: 1rem;
+        margin: 10px 0;
+    }
+
+    .navbar-collapse {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .d-flex {
+        margin-left: 0; 
+        margin-top: 10px;
+        justify-content: center; 
+    }
+
+    .navbar-nav {
+        display: none; 
+    }
+
+    .navbar-toggler {
+        order: -1; 
+    }
+
+    .navbar-collapse.show .navbar-nav {
+        display: flex; 
+    }
+}

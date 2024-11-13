@@ -5,164 +5,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat - Estilo WhatsApp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styleChat.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styleHeader.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        crossorigin="anonymous">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background-color: #121212;
-            /* Preto elegante */
-        }
-
-        .chat-container {
-            display: flex;
-            flex: 1;
-            height: 100%;
-        }
-
-        .user-list-container {
-            width: 30%;
-            background-color: #1a1a1a;
-            color: #fff;
-            overflow-y: auto;
-            border-right: 1px solid #333;
-        }
-
-        .user-list-header {
-            padding: 10px;
-            border-bottom: 1px solid #444;
-            font-size: 1.5rem;
-            text-align: center;
-        }
-
-        .user-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .user-item {
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #444;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-item:hover {
-            background-color: #333;
-        }
-
-        .user-item img {
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-        }
-
-        .chat-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            padding: 10px;
-            background-color: #1a1a1a;
-            border-bottom: 1px solid #333;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .chat-header img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: #222;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .message {
-            max-width: 60%;
-            padding: 10px;
-            border-radius: 10px;
-            word-wrap: break-word;
-        }
-
-        .message.from-me {
-            align-self: flex-end;
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .message.from-others {
-            align-self: flex-start;
-            background-color: #f1f1f1;
-            color: #000;
-        }
-
-        .chat-footer {
-            display: flex;
-            padding: 10px;
-            background-color: #1a1a1a;
-            border-top: 1px solid #333;
-            gap: 10px;
-        }
-
-        .chat-footer textarea {
-            flex: 1;
-            padding: 10px;
-            border-radius: 10px;
-            border: none;
-            resize: none;
-        }
-
-        .chat-footer button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 10px;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        .chat-footer button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 
 <body>
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="{{ url_for('homepage') }}">
+                <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" width="100">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('postagens') }}">Postagens</a>
+                    </li>
+                    {% if context['dados'] %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('chat', post_id=context['dados'][0].id) }}" class="nav-link">Chat</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('homepage') }}">Histórico</a>
+                    </li>
+                </ul>
+                <div class="d-flex flex-row align-items-center mt-3">
+                    <span class="text-white">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="{{ url_for('profile') }}">Configurações</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
     <div class="chat-container">
         <div class="user-list-container">
             <div class="user-list-header">Contatos</div>
             <ul class="user-list">
                 {% for user in users %}
-                    {% if user.id != current_user.id and user.email != 'admin@admin.com' %}
-                        <li class="user-item" onclick="selectUser({{ user.id }}, '{{ user.nome }}')">
-                            <img src="{{ user.avatar_url or '/static/default-avatar.png' }}" alt="Avatar">
-                            <span>{{ user.nome }}</span>
-                        </li>
-                    {% endif %}
+                {% if user.id != current_user.id and user.email != 'admin@admin.com' %}
+                <li class="user-item" onclick="selectUser({{ user.id }}, '{{ user.nome }}')">
+                    <img src="{{ user.avatar_url or '/static/default-avatar.png' }}" alt="Avatar">
+                    <span>{{ user.nome }}</span>
+                </li>
+                {% endif %}
                 {% endfor %}
             </ul>
-            
+
         </div>
 
         <div class="chat-main">
@@ -196,7 +101,7 @@
 
             selectedUserId = userId;
             chatUserName.textContent = userName;
-            chatUserAvatar.src = '/static/default-avatar.png'; 
+            chatUserAvatar.src = '/static/default-avatar.png';
             chatMessages.innerHTML = '';
 
             socket.emit('load_messages', { userId });
