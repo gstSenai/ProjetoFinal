@@ -43,8 +43,8 @@ def homepage():
 @app.route('/postagens')
 @login_required
 def postagens():
-    dados = Post.query.all()
-    context = {'dados': dados}
+    dados = Post.query.order_by(Post.data_criacao.desc()).all()  
+    context = {'dados': dados} 
     return render_template('posts.html', context=context)
 
    
@@ -80,7 +80,7 @@ def get_cidades_por_estado(estado_sigla):
 def postLista():
     dados = Post.query.order_by('cidade').all()
     context = {'dados': dados}
-    return render_template('index.html', context=context)
+    return render_template('home.html', context=context)
 
 @app.route('/cadastro/', methods=['GET', 'POST'])
 def Cadastro():
@@ -102,24 +102,30 @@ def logout():
     return redirect(url_for('homepage'))
 
 
+from flask import jsonify
+
 @app.route('/like/<int:post_id>', methods=['POST'])
 @login_required
 def like_post(post_id):
     post = Post.query.get_or_404(post_id)  
-   
     existing_like = UserLikes.query.filter_by(user_id=current_user.id, post_id=post_id).first()
-   
+    
     if existing_like:
         db.session.delete(existing_like)
         post.likes_count -= 1  
-        flash('Você removeu seu like.', 'info')
+        db.session.commit()
+        liked = False
     else:
         new_like = UserLikes(user_id=current_user.id, post_id=post_id)
         db.session.add(new_like)
         post.likes_count += 1
-        flash('Post curtido com sucesso!', 'success')
-    db.session.commit()
-    return redirect(url_for('homepage'))
+        db.session.commit()
+        liked = True
+
+    return jsonify({
+        'liked': liked,
+        'likes_count': post.likes_count
+    })
 
 
 @app.route('/post/delete/<int:post_id>', methods=['POST'])
@@ -141,7 +147,6 @@ def delete_post(post_id):
             flash(f'Erro ao excluir o post: {str(e)}', 'danger')
     else:
         flash('Você não tem permissão para excluir este post.', 'danger')
-
 
     return redirect(url_for('homepage'))
 
@@ -174,7 +179,7 @@ def filter_posts(profession):
     context = {
         'dados': filtered_posts
     }
-    return render_template('index.html', context=context)
+    return render_template('posts.html', context=context)
 
 socketio = SocketIO(app,cors_allowed_origins="*")
 
@@ -183,24 +188,28 @@ socketio = SocketIO(app,cors_allowed_origins="*")
 def chat(post_id):
     post = Post.query.get_or_404(post_id)
     messages = Message.query.filter_by(post_id=post_id).order_by(Message.timestamp.asc()).all()
-    
-    users = User.query.join(Message, Message.from_user_id == User.id).filter(Message.post_id == post_id).distinct().all()
-    
+
+    users = User.query.all()
+
     return render_template('chat.html', post=post, messages=messages, users=users)
 
+from collections import defaultdict
+
+active_chats = defaultdict(set)  
+message_notifications = defaultdict(lambda: defaultdict(int))
 
 @app.route('/send_message', methods=['POST'])
 @login_required
 def send_message():
-    content = request.form.get('message')
-    post_id = request.form.get('post_id')
-    to_user_id = request.form.get('to_user_id')
-    
-    if content:
+    content = request.json.get('message')
+    post_id = request.json.get('post_id')  
+    to_user_id = request.json.get('to_user_id')
+
+    if content and to_user_id:
         message = Message(
             from_user_id=current_user.id,
             to_user_id=to_user_id,
-            post_id=post_id,
+            post_id=post_id,  
             content=content
         )
         db.session.add(message)
@@ -212,54 +221,58 @@ def send_message():
             'from_user_nome': current_user.nome,
             'to_user_id': to_user_id,
             'post_id': post_id
-        }, room=post_id)
-    
-    return jsonify({'success': True})
+        }, room=post_id or to_user_id)  
 
+        return jsonify({'success': True}), 200
 
-@socketio.on('connect')
-def on_connect():
-    print('Client connected')
+    return jsonify({'success': False, 'error': 'Dados inválidos'}), 400
 
-@socketio.on('disconnect')
-def on_disconnect():
-    print('Client disconnected')
 
 @socketio.on('join')
 def on_join(data):
     post_id = data['post_id']
+    user_id = current_user.id
     join_room(post_id)
+
+    active_chats[post_id].add(user_id)
     emit('status', {'msg': f'{current_user.nome} entrou no chat.'}, room=post_id)
 
 @socketio.on('leave')
 def on_leave(data):
     post_id = data['post_id']
+    user_id = current_user.id
     leave_room(post_id)
+
+    if user_id in active_chats[post_id]:
+        active_chats[post_id].remove(user_id)
     emit('status', {'msg': f'{current_user.nome} saiu do chat.'}, room=post_id)
 
+@socketio.on('load_messages')
+def handle_load_messages(data):
+    user_id = data.get('userId')  
+    current_user_id = current_user.id
+
+    if user_id:
+        messages = Message.query.filter(
+            (Message.from_user_id == current_user_id) & (Message.to_user_id == user_id) |
+            (Message.from_user_id == user_id) & (Message.to_user_id == current_user_id)
+        ).order_by(Message.timestamp.asc()).all()
+
+        message_list = [{'message': msg.content, 'from_me': msg.from_user_id == current_user_id} for msg in messages]
+        emit('load_messages_response', {'messages': message_list}, room=request.sid)
+    else:
+        emit('load_messages_response', {'messages': []}, room=request.sid)
 
 
-@socketio.on('send_message')
-def handle_send_message_event(data):
-    post_id = data['post_id']
-    content = data['message']
-    to_user_id = data['to_user_id']
+        
+@app.route('/get_notifications', methods=['GET'])
+@login_required
+def get_notifications():
+    post_id = request.args.get('post_id')
+    user_id = current_user.id
 
-    message = Message(
-        from_user_id=current_user.id,
-        to_user_id=to_user_id,
-        post_id=post_id,
-        content=content
-    )
-    db.session.add(message)
-    db.session.commit()
-
-    emit('receive_message', {
-        'message': content,
-        'from_user_id': current_user.id,
-        'from_user_nome': current_user.nome,
-        'to_user_id': to_user_id
-    }, room=post_id)
+    notifications = message_notifications.get(post_id, {}).get(user_id, 0)
+    return jsonify({'notifications': notifications})
 
 
 
