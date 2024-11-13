@@ -39,16 +39,16 @@
                     <td>{{ usuario.email }}</td>
                     <td>
                         {% if usuario.email != 'admin@admin.com' %}
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ usuario.id }}">
+                        <button type="button" class="btn btn-danger text-black" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ usuario.id }}">
                             Excluir
                         </button>
-                    
-                        <div class="modal fade" id="confirmDeleteModal{{ usuario.id }}" tabindex="-1" aria-labelledby="confirmDeleteLabel{{ usuario.id }}" aria-hidden="true">
-                            <div class="modal-dialog">
+                        
+                        <div class="modal fade" id="confirmDeleteModal{{ usuario.id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel{{ usuario.id }}" aria-hidden="true">
+                            <div class="modal-dialog bg-secondary" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="confirmDeleteLabel{{ usuario.id }}">Confirmar Exclusão</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <h5 class="modal-title" id="confirmDeleteModalLabel{{ usuario.id }}">Confirmar Exclusão</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                     </div>
                                     <div class="modal-body">
                                         Tem certeza que deseja excluir o usuário <strong>{{ usuario.nome }} {{ usuario.sobrenome }}</strong>?

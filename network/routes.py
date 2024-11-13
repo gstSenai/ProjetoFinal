@@ -40,12 +40,32 @@ def homepage():
     }
     return render_template('home.html', context=context)
 
-@app.route('/postagens')
+from flask import request
+
+@app.route('/postagens', methods=['GET'])
 @login_required
 def postagens():
-    dados = Post.query.order_by(Post.data_criacao.desc()).all()  
-    context = {'dados': dados} 
+    nome_usuario = request.args.get('nome_usuario', '')
+    estado = request.args.get('estado', '')
+    cidade = request.args.get('cidade', '')
+
+    query = Post.query
+
+    if nome_usuario:
+        query = query.filter(Post.user.has(nome=nome_usuario))
+
+    if estado:
+        query = query.filter(Post.estado == estado)
+
+    if cidade:
+        query = query.filter(Post.cidade == cidade)
+
+    dados = query.order_by(Post.data_criacao.desc()).all()
+    
+    context = {'dados': dados}
     return render_template('posts.html', context=context)
+
+
 
    
 @app.route('/post_novo', methods=['GET', 'POST'])
@@ -70,7 +90,7 @@ def PostNovo():
         return redirect(url_for('homepage'))
     dados = Post.query.order_by('cidade').all()
     context = {'dados': dados}
-    return render_template('post_novo.html', form=form, context=context)
+    return render_template('posts.html', form=form, context=context)
 
 def get_cidades_por_estado(estado_sigla):
     response = requests.get(f'https://servicodados.ibge.gov.br/api/v1/localidades/estados/{estado_sigla}/municipios')
@@ -150,7 +170,7 @@ def delete_post(post_id):
     else:
         flash('Você não tem permissão para excluir este post.', 'danger')
 
-    return redirect(url_for('homepage'))
+    return redirect(url_for('postagens'))
 
 
 @app.route('/post/<int:post_id>/add_comment', methods=['POST'])
@@ -347,6 +367,14 @@ def excluir_usuario(user_id):
         flash('Você não tem permissão para excluir usuários!', 'danger')
 
     return redirect(url_for('pagina_admin'))
+
+@app.route('/historico')
+@login_required
+def historico():
+    postagens_usuario = Post.query.filter_by(user_id=current_user.id).all()
+    dados = Post.query.order_by('cidade').all()
+    context = {'dados': dados}
+    return render_template('historico.html', postagens=postagens_usuario, context=context)
 
 
 
