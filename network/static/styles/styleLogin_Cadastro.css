@@ -92,9 +92,10 @@ body {
     color: white;
     flex: 1;
     padding: 5px 10px;
+    border: none;
     border-radius: 12px;
-    border: 1px solid #FFF;
     background: transparent;
+    outline: none;
 }
 
 .dentrologin {

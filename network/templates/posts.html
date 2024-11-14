@@ -132,7 +132,7 @@
                     <td colspan="">
                         <div class="post-container">
                             <div class="post-header">
-                                <span class="post-username text-white">{{ post.user.nome }}</span>
+                                <span class="post-username">{{ post.user.nome }}</span>
                                 <span class="post-date">{{ post.data_criacao.strftime('%d %b %Y') }}</span>
                             </div>
                             <div class="post-content">
@@ -184,7 +184,7 @@
                                 {% endif %}
                             </div>
                             <div class="post-comments mt-3">
-                                <h3 class="text-white">Comentários ({{ post.comentarios|length }})</h3>
+                                <h3>Comentários ({{ post.comentarios|length }})</h3>
                                 <ul>
                                     {% for comentario in post.comentarios %}
                                     <li>

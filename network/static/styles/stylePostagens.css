@@ -1,13 +1,13 @@
 body {
     font-family: 'Pridi', sans-serif;
     color: #fff;
-    background-color: #000; 
+    background-color: #0F0F0F; 
     margin: 0; 
     padding: 0;
 }
 
 .container-post {
-    background-color: #000;
+    background-color: #0F0F0F;
     padding: 20px;
 }
 
@@ -19,7 +19,7 @@ body {
 #local-profi {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 4rem;
 }
 
 .style-profi {
@@ -40,8 +40,9 @@ body {
     margin-bottom: 30px;
 }
 
+
 .post-container {
-    background-color: #1a1a1a;
+    background-color: #DBDBDB;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 10px;
@@ -58,7 +59,6 @@ body {
 
 .post-content p {
     margin: 5px 0;
-    color: #fff;
 }
 
 .post-actions {
