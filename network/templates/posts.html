@@ -61,7 +61,6 @@
         </nav>
     </header>
     <div class="container-post">
-
         <div class="container mt-4">
             <h1 class="mb-4">Postagens</h1>
             <div class="style-search">
@@ -85,9 +84,6 @@
                     </div>
                 </form>
             </div>
-            
-
-            
             <div id="local-profi" class="mt-5">
                 <div class="style-profi">
                     <a href="{{ url_for('filter_posts', profession='Programador') }}" class="rem-img">
@@ -125,95 +121,64 @@
                     </a>
                 </div>
             </div>
+            <div class="div-post">
+
+            </div>
             <tbody>
-                {% for post in context['dados'] %}
+                <div class="d-flex flex-wrap justify-content-center gap-5 mt-posts">
+                    {% set post_count = context['dados'] | length %}
+                    {% for post in context['dados'] %}
+                    <div class="post-container ">
+                        <div class="post-header">
+                            <h4>{{ post.user.nome }} - {{ post.profissao }}</h4>
+                            <p>{{ post.cidade }}, {{ post.estado }}</p>
+                        </div>
+                        <div class="post-content">
+                            <p>{{ post.mensagem }}</p>
+                            <span class="post-date">{{ post.data_criacao.strftime('%d %b %Y') }}</span>
+                        </div>
+                        <div class="post-actions">
+                            <button class="like-button not-liked" data-post-id="{{ post.id }}"
+                                data-likes="{{ post.likes_count }}">
+                                Curtir (<span class="likes-count">{{ post.likes_count }}</span>)
+                            </button>
 
-                <tr class="post-row">
-                    <td colspan="">
-                        <div class="post-container">
-                            <div class="post-header">
-                                <span class="post-username">{{ post.user.nome }}</span>
-                                <span class="post-date">{{ post.data_criacao.strftime('%d %b %Y') }}</span>
-                            </div>
-                            <div class="post-content">
-                                <p>{{ post.mensagem }}</p>
-                                <p><strong>Profissão:</strong> {{ post.profissao }}</p>
-                                <p><strong>Estado:</strong> {{ post.estado }}</p>
-                                <p><strong>Cidade:</strong> {{ post.cidade }}</p>
-                            </div>
-                            <div class="post-actions">
-                                <form action="{{ url_for('like_post', post_id=post.id) }}" method="post"
-                                    class="d-inline">
-                                    <button type="submit" class="btn btn-black bg-danger like-button"
-                                        data-post-id="{{ post.id }}" data-likes="{{ post.likes_count }}">
-                                        <img src="{{ url_for('static', filename='assets/like.png') }}"
-                                            class="bg-danger like-icon" width="25px">
-                                        <span class="likes-count">{{ post.likes_count }}</span>
-                                    </button>
-                                </form>
-                                {% if post.user_id == current_user.id %}
-                                <button type="button" class="btn btn-danger text-black" data-bs-toggle="modal"
-                                    data-bs-target="#confirmDeleteModal{{ post.id }}">
-                                    Excluir
-                                </button>
-
-                                <div class="modal fade" id="confirmDeleteModal{{ post.id }}" tabindex="-1"
-                                    aria-labelledby="confirmDeleteModalLabel{{ post.id }}" aria-hidden="true">
-                                    <div class="modal-dialog bg-secondary" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmDeleteModalLabel{{ post.id }}">
-                                                    Confirmar Exclusão</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Fechar"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Você tem certeza de que deseja excluir este post?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                <form action="{{ url_for('delete_post', post_id=post.id) }}"
-                                                    method="post" class="d-inline">
-                                                    <button type="submit" class="btn btn-danger">Excluir</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
+                            {% if post.user_id == current_user.id %}
+                            <button type="button" class="btn-delete-post" data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal{{ post.id }}">
+                                Excluir
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if post.user_id == current_user.id %}
+                    <div class="modal fade" id="confirmDeleteModal{{ post.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirmar Exclusão</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Fechar"></button>
                                 </div>
-                                {% endif %}
-                            </div>
-                            <div class="post-comments mt-3">
-                                <h3>Comentários ({{ post.comentarios|length }})</h3>
-                                <ul>
-                                    {% for comentario in post.comentarios %}
-                                    <li>
-                                        <p><strong>{{ comentario.user.nome }}:</strong> {{ comentario.comentario
-                                            }}</p>
-                                        <p><small>Postado em: {{ comentario.data_criacao.strftime('%d/%m/%Y')
-                                                }}</small></p>
-                                    </li>
-                                    {% else %}
-                                    <li>Nenhum comentário ainda.</li>
-                                    {% endfor %}
-                                </ul>
-                                <form action="{{ url_for('add_comment', post_id=post.id) }}" method="post">
-                                    <div class="form-group">
-                                        <textarea name="comentario" class="form-control"
-                                            placeholder="Adicione um comentário"></textarea>
-                                    </div>
-                                    <div class="mt-3">
-                                        <button type="submit" class="btn btn-primary">Comentar</button>
-                                    </div>
-                                </form>
+                                <div class="modal-body">
+                                    Tem certeza de que deseja excluir este post?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post">
+                                        <button type="submit" class="btn btn-danger">Excluir</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </td>
-                </tr>
-                <div class="bg-secondary divisoria">
+                    </div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </tbody>
+
+
         </div>
 
         <script>
@@ -223,30 +188,27 @@
 
                     var button = $(this);
                     var postId = button.data("post-id");
-                    var currentLikes = button.data("likes");
 
                     $.ajax({
                         url: '/like/' + postId,
                         method: 'POST',
                         dataType: 'json',
                         success: function (response) {
-                            button.data("likes", response.likes_count);
                             button.find(".likes-count").text(response.likes_count);
 
                             if (response.liked) {
-                                button.addClass("liked");
-                                button.removeClass("not-liked");
+                                button.addClass("liked").removeClass("not-liked");
                             } else {
-                                button.addClass("not-liked");
-                                button.removeClass("liked");
+                                button.addClass("not-liked").removeClass("liked");
                             }
                         },
                         error: function () {
-                            alert("Ocorreu um erro. Tente novamente.");
+                            alert("Ocorreu um erro ao tentar curtir o post. Tente novamente.");
                         }
                     });
                 });
             });
+
         </script>
 </body>
 

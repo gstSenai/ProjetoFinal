@@ -1,8 +1,8 @@
 body {
-    font-family: 'Pridi', sans-serif;
-    color: #fff;
-    background-color: #0F0F0F; 
-    margin: 0; 
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    margin: 0;
     padding: 0;
 }
 
@@ -11,10 +11,16 @@ body {
     padding: 20px;
 }
 
+.rem-img-Post{
+    height: 8rem;
+    width: 8rem;
+}
+
 .d-flex.align-items-center span {
     color: #f8f9fa;
     margin-right: 10px;
 }
+
 
 #local-profi {
     display: flex;
@@ -41,36 +47,78 @@ body {
 }
 
 
+
 .post-container {
-    background-color: #DBDBDB;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 10rem;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(33.333% - 16px); 
+}
+
+.mt-posts{
+   margin-top: 10rem;
 }
 
 .post-header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    font-weight: 500;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+}
+
+.post-header img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.post-header .user-info {
+    margin-left: 12px;
+    flex-grow: 1;
 }
 
 .post-content p {
-    margin: 5px 0;
+    margin: 0 0 8px;
+    line-height: 1.6;
+    color: #333;
 }
+
+.post-header .user-info p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.post-content {
+    margin-top: 12px;
+}
+
 
 .post-actions {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    margin-top: 15px;
+    margin-top: 12px;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
 }
 
-.post-actions .btn {
-    display: inline-flex;
-    align-items: center;
+.post-actions button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.post-actions button:hover {
+    background-color: #0056b3;
 }
 
 .post-comments ul {
@@ -78,6 +126,30 @@ body {
     padding: 0;
     margin-top: 10px;
 }
+
+.post-comments {
+    margin-top: 16px;
+}
+
+.post-comments p {
+    font-size: 14px;
+    color: #666;
+}
+
+textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px;
+    resize: none;
+}
+
+textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
 
 .post-comments li {
     background-color: #333;
@@ -94,6 +166,35 @@ body {
 
 .post-comments .form-group {
     margin-top: 10px;
+}
+
+.comment-button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-delete-post:hover {
+    background-color: #cc0000;
+}
+
+.btn-delete-post {
+    background-color: #ff6666;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.comment-button:hover {
+    background-color: #218838;
 }
 
 .modal-header, .modal-footer {
@@ -124,14 +225,24 @@ body {
     margin-right: 5px; 
 }
 
+.like-button {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .like-button.not-liked {
-    background-color: white; 
+    background-color: rgb(255, 211, 211); 
     color: #000;  
 }
 
 .like-button.liked {
-    background-color: red; 
-    color: white; 
+    background-color: red;
+    color: white;
 }
 
 .style-search {
@@ -187,6 +298,20 @@ body {
     width: 100%;
 }
 
+.div-post{
+    width: 100%;
+    height: 2rem;
+    background-color: #e3e3f7;
+    margin-top: 6rem;
+    border-radius: 2rem;
+}
+
+@media (max-width: 992px) {
+    .post-container {
+        flex: 1 1 calc(50% - 16px); 
+    }
+}
+
 @media (max-width: 768px) {
     .navbar-nav {
         margin-top: 10px;
@@ -197,5 +322,8 @@ body {
     }
     #local-profi {
         display: none;
+    }
+    .post-container {
+        flex: 1 1 100%;
     }
 }

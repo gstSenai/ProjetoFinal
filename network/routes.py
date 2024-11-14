@@ -87,10 +87,10 @@ def PostNovo():
         )
         db.session.add(nova_postagem)
         db.session.commit()
-        return redirect(url_for('homepage'))
+        return redirect(url_for('postagens'))
     dados = Post.query.order_by('cidade').all()
     context = {'dados': dados}
-    return render_template('posts.html', form=form, context=context)
+    return render_template('post_novo.html', form=form, context=context)
 
 def get_cidades_por_estado(estado_sigla):
     response = requests.get(f'https://servicodados.ibge.gov.br/api/v1/localidades/estados/{estado_sigla}/municipios')
