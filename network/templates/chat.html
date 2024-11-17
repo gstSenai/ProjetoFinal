@@ -39,6 +39,7 @@
                     </li>
                 </ul>
                 <div class="d-flex flex-row align-items-center mt-3">
+                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}" alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
                     <span class="text-white">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">

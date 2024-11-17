@@ -44,6 +44,7 @@
                     </li>
                 </ul>
                 <div class="d-flex flex-row align-items-center mt-3">
+                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}" alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
                     <span class="text-white">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
                     <div class="dropdown">
                         <button class="btn dropdown-toggle text-white" type="button" id="userDropdown"
@@ -60,9 +61,14 @@
             </div>
         </nav>
     </header>
+    
     <div class="container-post">
         <div class="container mt-4">
-            <h1 class="mb-4">Postagens</h1>
+            <div class="justify-content-center gap-post-title">
+                <div>
+                    <h1 class="mb-4">Postagens</h1>
+                </div>
+            </div>
             <div class="style-search">
                 <form action="{{ url_for('postagens') }}" method="get" class="mb-4">
                     <div class="row">
@@ -80,6 +86,11 @@
                         </div>
                         <div class="col-md-3">
                             <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12 text-center">
+                            <button type="reset" class="btn btn-secondary">Limpar Filtros</button>
                         </div>
                     </div>
                 </form>
@@ -124,12 +135,18 @@
             <div class="div-post">
 
             </div>
+            <div class="d-flex justify-content-center mt-5">
+                <a href="{{ url_for('PostNovo') }}" class="btn btn-primary btn-lg  px-4 py-2 shadow">
+                    Faça Seu Post
+                </a>
+            </div>
             <tbody>
                 <div class="d-flex flex-wrap justify-content-center gap-5 mt-posts">
                     {% set post_count = context['dados'] | length %}
                     {% for post in context['dados'] %}
-                    <div class="post-container ">
-                        <div class="post-header">
+                    <div class="post-container">
+                        <div class="post-header d-flex align-items-center">
+                            <img src="{{ url_for('static', filename='assets/' + post.user.imagem) if post.user.imagem else url_for('static', filename='default.png') }}" alt="Foto do Perfil" class="img-thumbnail" style="max-width: 50px; margin-right: 10px;">
                             <h4>{{ post.user.nome }} - {{ post.profissao }}</h4>
                             <p>{{ post.cidade }}, {{ post.estado }}</p>
                         </div>
@@ -142,7 +159,7 @@
                                 data-likes="{{ post.likes_count }}">
                                 Curtir (<span class="likes-count">{{ post.likes_count }}</span>)
                             </button>
-
+            
                             {% if post.user_id == current_user.id %}
                             <button type="button" class="btn-delete-post" data-bs-toggle="modal"
                                 data-bs-target="#confirmDeleteModal{{ post.id }}">
@@ -157,15 +174,13 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Confirmar Exclusão</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Fechar"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                 </div>
                                 <div class="modal-body">
                                     Tem certeza de que deseja excluir este post?
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                     <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post">
                                         <button type="submit" class="btn btn-danger">Excluir</button>
                                     </form>
@@ -177,6 +192,7 @@
                     {% endfor %}
                 </div>
             </tbody>
+            
 
 
         </div>

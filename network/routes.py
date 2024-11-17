@@ -1,5 +1,5 @@
 from network import app,db, bcrypt
-from flask import render_template,redirect, url_for, flash, request, session, jsonify
+from flask import render_template,redirect, url_for, flash, request, session, jsonify, current_app
 from network.models import Post,User,PostComentarios, UserLikes, Message
 from network.forms import PostForm, UserForm, PostComentarioForm, LoginForm
 from flask_login import login_user, current_user, logout_user, login_required
@@ -297,9 +297,12 @@ def get_notifications():
     notifications = message_notifications.get(post_id, {}).get(user_id, 0)
     return jsonify({'notifications': notifications})
 
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'network/static/assets')
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-UPLOAD_FOLDER = 'static/assets/' 
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -311,13 +314,20 @@ def profile():
         current_user.sobrenome = form.sobrenome.data
         current_user.email = form.email.data
 
-
         if form.senha.data:
             if form.senha.data == form.confirmacao_senha.data:
                 current_user.senha = bcrypt.generate_password_hash(form.senha.data.encode('utf-8'))
             else:
                 flash('As senhas não coincidem', 'danger')
                 return redirect(url_for('profile'))
+
+        if 'imagem' in request.files:
+            imagem = request.files['imagem']
+            if imagem and allowed_file(imagem.filename):
+                filename = secure_filename(imagem.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                imagem.save(filepath)
+                current_user.imagem = filename
 
         db.session.commit()
         flash('Perfil atualizado com sucesso', 'success')
@@ -327,6 +337,7 @@ def profile():
         form.nome.data = current_user.nome
         form.sobrenome.data = current_user.sobrenome
         form.email.data = current_user.email
+
     dados = Post.query.order_by('cidade').all()
     context = {'dados': dados}
     return render_template('profile.html', form=form, context=context)
