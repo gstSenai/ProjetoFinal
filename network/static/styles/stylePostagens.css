@@ -10,10 +10,11 @@ html, body {
     font-family: 'Arial', sans-serif;
 }
 
+
 .container-post {
     background-color: #0F0F0F;
-    padding: 20px;
     min-height: 100vh; 
+    flex: 1;
     box-sizing: border-box;
 }
 .rem-img-Post{
@@ -67,7 +68,7 @@ html, body {
 
 
 .post-container {
-    background-color: #ffffff;
+        background-color: #dbdbdb;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
@@ -77,7 +78,7 @@ html, body {
 }
 
 .mt-posts{
-   margin-top: 9rem;
+   margin-top: 8rem;
 }
 
 .post-header {
@@ -218,6 +219,19 @@ textarea:focus {
 .modal-header, .modal-footer {
     background-color: #343a40;
     color: #fff;
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+    margin-top: 20rem; 
+}
+
+footer p {
+    margin: 0;
 }
 
 .modal-header .close {

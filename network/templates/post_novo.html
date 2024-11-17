@@ -40,7 +40,8 @@
                     </li>
                 </ul>
                 <div class="d-flex flex-row align-items-center mt-3">
-                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}" alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
+                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}"
+                        alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
                     <span class="text-white">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
                     <div class="dropdown">
                         <button class="btn dropdown-toggle text-white" type="button" id="userDropdown"
@@ -60,7 +61,7 @@
 
     <div class="container mt-4">
         <h3 class="text-center mb-4">Novo Post</h3>
-        <form method="post" action="{{ url_for('PostNovo') }}">
+        <form method="post" action="{{ url_for('PostNovo') }}" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
 
             <div class="mb-3">
@@ -82,7 +83,6 @@
                 {{ form.profissao.label(class_="form-label") }}
                 {{ form.profissao(class="form-control") }}
             </div>
-
             {{ form.btnSubmit(class="btn btn-primary w-100") }}
         </form>
     </div>

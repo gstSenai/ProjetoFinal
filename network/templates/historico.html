@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,13 +10,30 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styleHeader.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .container {
+        flex: 1;
+    }
+
+    .footer {
+        margin-top: auto;
+    }
+</style>
+
 <body class="bg-black">
     <header>
         <nav class="navbar navbar-expand-lg">
             <a class="navbar-brand" href="{{ url_for('homepage') }}">
                 <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" width="100">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarContent">
@@ -33,10 +51,12 @@
                     </li>
                 </ul>
                 <div class="d-flex flex-row align-items-center mt-3">
-                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}" alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
+                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}"
+                        alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
                     <span class="text-white">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
                     <div class="dropdown">
-                        <button class="btn dropdown-toggle text-white" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn dropdown-toggle text-white" type="button" id="userDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
@@ -53,19 +73,34 @@
         <h1 class="mb-4">Histórico de Postagens</h1>
         <div class="list-group">
             {% for post in postagens %}
-                <div class="list-group-item mt-5">
-                    <h5 class="mb-1">{{ post.titulo }}</h5>
-                    <p>{{ post.mensagem }}</p>
-                    <small>{{ post.data_criacao.strftime('%d %b %Y') }}</small>
-                </div>
+            <div class="list-group-item mt-5">
+                <h5 class="mb-1">{{ post.titulo }}</h5>
+                <p>{{ post.mensagem }}</p>
+                <small>{{ post.data_criacao.strftime('%d %b %Y') }}</small>
+            </div>
             {% else %}
-                <div class="alert alert-info" role="alert">
-                    Você ainda não fez nenhuma postagem.
-                </div>
+            <div class="alert alert-info" role="alert">
+                Você ainda não fez nenhuma postagem.
+            </div>
             {% endfor %}
         </div>
     </div>
-
+    <footer class="bg-dark text-white py-4 mt-5 footer">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="mb-3">Empresa GP</h5>
+                    <p class="mb-0">Contato: gp@gmail.com</p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <p class="small mb-0">&copy; 2024 Empresa GP - Todos os direitos reservados</p>
+                </div>
+            </div>
+        </div>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

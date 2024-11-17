@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styleHeader.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styleFooter.css') }}">
 </head>
 
 <body>
@@ -44,7 +45,8 @@
                     </li>
                 </ul>
                 <div class="d-flex flex-row align-items-center mt-3">
-                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}" alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
+                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}"
+                        alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
                     <span class="text-white">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
                     <div class="dropdown">
                         <button class="btn dropdown-toggle text-white" type="button" id="userDropdown"
@@ -61,12 +63,12 @@
             </div>
         </nav>
     </header>
-    
+
     <div class="container-post">
-        <div class="container mt-4">
+        <div class="container">
             <div class="justify-content-center gap-post-title">
                 <div>
-                    <h1 class="mb-4">Postagens</h1>
+                    <h1 class="mb-4 pt-5">Postagens</h1>
                 </div>
             </div>
             <div class="style-search">
@@ -146,7 +148,8 @@
                     {% for post in context['dados'] %}
                     <div class="post-container">
                         <div class="post-header d-flex align-items-center">
-                            <img src="{{ url_for('static', filename='assets/' + post.user.imagem) if post.user.imagem else url_for('static', filename='default.png') }}" alt="Foto do Perfil" class="img-thumbnail" style="max-width: 50px; margin-right: 10px;">
+                            <img src="{{ url_for('static', filename='assets/' + post.user.imagem) if post.user.imagem else url_for('static', filename='default.png') }}"
+                                alt="Foto do Perfil" class="img-thumbnail" style="max-width: 50px; margin-right: 10px;">
                             <h4>{{ post.user.nome }} - {{ post.profissao }}</h4>
                             <p>{{ post.cidade }}, {{ post.estado }}</p>
                         </div>
@@ -159,7 +162,12 @@
                                 data-likes="{{ post.likes_count }}">
                                 Curtir (<span class="likes-count">{{ post.likes_count }}</span>)
                             </button>
-            
+
+                            <button class="btn btn-info" data-bs-toggle="modal"
+                                data-bs-target="#commentModal{{ post.id }}">
+                                <i class="fas fa-comments"></i> Comentários
+                            </button>
+
                             {% if post.user_id == current_user.id %}
                             <button type="button" class="btn-delete-post" data-bs-toggle="modal"
                                 data-bs-target="#confirmDeleteModal{{ post.id }}">
@@ -168,19 +176,56 @@
                             {% endif %}
                         </div>
                     </div>
+
+                    <div class="modal fade" id="commentModal{{ post.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Comentários para o Post de {{ post.user.nome }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="list-group mb-3">
+                                        {% for comentario in post.comentarios %}
+                                        <li class="list-group-item">
+                                            <strong>{{ comentario.user.nome }}</strong> ({{
+                                            comentario.data_criacao.strftime('%d %b %Y') }})
+                                            <p>{{ comentario.comentario }}</p>
+                                        </li>
+                                        {% else %}
+                                        <li class="list-group-item">Nenhum comentário ainda.</li>
+                                        {% endfor %}
+                                    </ul>
+
+                                    <form action="{{ url_for('add_comment', post_id=post.id) }}" method="POST">
+                                        <div class="mb-3">
+                                            <label for="comentario" class="form-label">Adicionar Comentário</label>
+                                            <textarea class="form-control" id="comentario" name="comentario" rows="3"
+                                                required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Comentar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {% if post.user_id == current_user.id %}
                     <div class="modal fade" id="confirmDeleteModal{{ post.id }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Confirmar Exclusão</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Fechar"></button>
                                 </div>
                                 <div class="modal-body">
                                     Tem certeza de que deseja excluir este post?
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
                                     <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post">
                                         <button type="submit" class="btn btn-danger">Excluir</button>
                                     </form>
@@ -192,10 +237,23 @@
                     {% endfor %}
                 </div>
             </tbody>
-            
-
-
         </div>
+        <footer class="bg-dark  py-4 ">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="mb-3 text-white">Empresa GP</h5>
+                        <p class="mb-0 text-white">Contato: gp@gmail.com</p>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <p class="small mb-0 text-white">&copy; 2024 Empresa GP - Todos os direitos reservados</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        
 
         <script>
             $(document).ready(function () {
@@ -226,6 +284,8 @@
             });
 
         </script>
+
+
 </body>
 
 </html>

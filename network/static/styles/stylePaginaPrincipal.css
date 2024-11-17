@@ -13,11 +13,11 @@ body {
     background-color: #0F0F0F;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100vh;  /* Garante que a altura mínima seja a da tela */
 }
 
-.bg-paginaPri {
-    background-color: #343a40;
+.container {
+    flex: 1;  /* Faz com que o conteúdo ocupe todo o espaço disponível */
 }
 
 header {
@@ -41,13 +41,12 @@ section .descricao {
     color: #fff;
 }
 
-
 section .btn-post {
     background-color: #FF914D;
     color: #fff;
     border: none;
     padding: 12px 30px;
-    border-radius: 30px;
+    border-radius: 12px;
     font-size: 18px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
@@ -57,22 +56,12 @@ section .btn-post:hover {
     background-color: #e07c3c;
 }
 
-section.about, section.services, section.contact {
-    padding: 50px 20px;
-}
-
-.about p, .services p, .contact p {
-    font-size: 16px;
-    margin-bottom: 20px;
-}
-
 footer {
     background-color: #343a40;
     color: #fff;
     text-align: left;
-    position: relative;
     padding: 40px 20px;
-    margin-top: auto;
+    margin-top: auto; /* Faz o footer ir para o final da página */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -140,7 +129,6 @@ footer .footer-logo {
     justify-content: space-around;
     flex-wrap: wrap;
     gap: 20px;
-    
 }
 
 .partner {
@@ -160,19 +148,6 @@ footer .footer-logo {
 .partner p {
     margin: 5px 0;
 }
-
-@media (max-width: 768px) {
-    .partners-images {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .partner {
-        width: 80%;
-        margin-bottom: 20px;
-    }
-}
-
 
 @media (max-width: 768px) {
     footer .footer-content {

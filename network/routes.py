@@ -8,10 +8,20 @@ from sqlalchemy.orm import joinedload
 import requests
 import os
 from werkzeug.utils import secure_filename
+from sqlalchemy import func
+from datetime import datetime
+
 def get_estados():
     response = requests.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
     return response.json()
 
+
+from datetime import datetime
+from flask import flash, redirect, render_template, url_for
+from flask_login import login_user, current_user
+
+from datetime import datetime
+import pytz
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -22,12 +32,18 @@ def login():
         user = form.login()
         if user:
             login_user(user, remember=True)
+
+            br_tz = pytz.timezone('America/Sao_Paulo')
+            user.last_login = datetime.now(br_tz)
+            db.session.commit()
+
             if user.email == "admin@admin.com":
                 return redirect(url_for('pagina_admin'))
             return redirect(url_for('homepage'))
         else:
             flash('E-mail ou senha inválidos', 'danger')
     return render_template('login.html', form=form)
+
 
 
 @app.route('/home', methods=['GET'])
@@ -66,31 +82,40 @@ def postagens():
     return render_template('posts.html', context=context)
 
 
-
-   
 @app.route('/post_novo', methods=['GET', 'POST'])
 def PostNovo():
     form = PostForm()
+
     if not form.estado.choices:
         form.estado.choices = [(estado['sigla'], estado['nome']) for estado in get_estados()]
+
     if form.estado.data:
         cidades = get_cidades_por_estado(form.estado.data)
         form.cidade.choices = [(cidade, cidade) for cidade in cidades]
 
     if form.validate_on_submit():
-        nova_postagem = Post(
-            mensagem=form.mensagem.data,
-            estado=form.estado.data,
-            cidade=form.cidade.data,
-            profissao=form.profissao.data,
-            user_id=current_user.id  
-        )
-        db.session.add(nova_postagem)
-        db.session.commit()
-        return redirect(url_for('postagens'))
+        try:
+            nova_postagem = Post(
+                mensagem=form.mensagem.data,
+                estado=form.estado.data,
+                cidade=form.cidade.data,
+                profissao=form.profissao.data,
+                user_id=current_user.id  
+            )
+            db.session.add(nova_postagem)
+            db.session.commit()
+
+            flash('Post criado com sucesso!', 'success')
+            return redirect(url_for('postagens'))
+        except Exception as e:
+            flash('Ocorreu um erro ao criar o post. Tente novamente mais tarde.', 'error')
+            return render_template('post_novo.html', form=form)
+
     dados = Post.query.order_by('cidade').all()
     context = {'dados': dados}
+
     return render_template('post_novo.html', form=form, context=context)
+
 
 def get_cidades_por_estado(estado_sigla):
     response = requests.get(f'https://servicodados.ibge.gov.br/api/v1/localidades/estados/{estado_sigla}/municipios')
@@ -193,7 +218,7 @@ def add_comment(post_id):
         flash('Não é possível adicionar um comentário vazio.', 'danger')
 
 
-    return redirect(url_for('homepage'))
+    return redirect(url_for('postagens'))
 
 @app.route('/filter/<string:profession>', methods=['GET'])
 def filter_posts(profession):
@@ -347,8 +372,22 @@ def profile():
 @app.route('/admin')
 @login_required
 def pagina_admin():
-    usuarios = User.query.all() 
-    return render_template('admin.html', usuarios=usuarios)  
+    usuarios = User.query.all()
+
+    posts_por_mes = (
+        db.session.query(
+            func.strftime('%Y-%m', Post.data_criacao).label('mes'),
+            func.count(Post.id).label('total')
+        )
+        .group_by('mes')
+        .order_by('mes')
+        .all()
+    )
+
+    labels = [mes_total.mes for mes_total in posts_por_mes]
+    data = [mes_total.total for mes_total in posts_por_mes]
+
+    return render_template('admin.html', usuarios=usuarios, labels=labels, data=data)  
 
 
 @app.route('/usuario/delete/<int:user_id>', methods=['POST'])

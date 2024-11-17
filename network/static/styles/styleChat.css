@@ -5,7 +5,8 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background-color: #121212;
+    background-color: #000; 
+    color: #fff;
 }
 
 .chat-container {
@@ -16,7 +17,7 @@ body {
 
 .user-list-container {
     width: 30%;
-    background-color: #1a1a1a;
+    background-color: #121212;
     color: #fff;
     overflow-y: auto;
     border-right: 1px solid #333;
@@ -59,11 +60,12 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background-color: #000; 
 }
 
 .chat-header {
     padding: 10px;
-    background-color: #fff;
+    background-color: #1a1a1a;
     border-bottom: 1px solid #333;
     display: flex;
     align-items: center;
@@ -80,7 +82,7 @@ body {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    background-color: #222;
+    background-color: #000; 
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -101,14 +103,14 @@ body {
 
 .message.from-others {
     align-self: flex-start;
-    background-color: #f1f1f1;
-    color: #000;
+    background-color: #444;
+    color: #fff; 
 }
 
 .chat-footer {
     display: flex;
     padding: 10px;
-    background-color: #1a1a1a;
+    background-color: #121212;
     border-top: 1px solid #333;
     gap: 10px;
 }
@@ -118,6 +120,8 @@ body {
     padding: 10px;
     border-radius: 10px;
     border: none;
+    background-color: #333;
+    color: #fff; 
     resize: none;
 }
 
