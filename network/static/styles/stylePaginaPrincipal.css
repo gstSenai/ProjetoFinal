@@ -176,3 +176,24 @@ footer .footer-logo {
         font-size: 16px;
     }
 }
+
+.welcome-section,
+.about-us-section {
+    font-family: 'Arial', sans-serif;
+}
+
+.about-us-section {
+    font-family: 'Roboto', sans-serif; 
+    font-size: 16px; 
+}
+
+.welcome-section h2,
+.about-us-section h2 {
+    font-family: 'Verdana', sans-serif;
+    font-weight: bold;
+}
+
+.welcome-section p,
+.about-us-section p {
+    font-family: 'Georgia', serif; 
+}

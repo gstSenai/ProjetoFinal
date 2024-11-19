@@ -1,24 +1,24 @@
+
 body {
-    background-color: #000;
+    background-color: #000; 
     color: #fff;
+}
+
+header {
+    padding: 3rem;
+    display: flex;
+    justify-content: center;
+    background-color: #222; 
+}
+
+#fundo-header {
+    padding: 1rem;
+    border-radius: 2rem;
 }
 
 h2 {
     text-align: center;
     margin-top: 20px;
-}
-
-header {
-    background-color: #333;
-    padding: 3rem;
-    display: flex;
-    justify-content: center;
-}
-
-#fundo-header {
-    background-color: #ccc;
-    padding: 1rem;
-    border-radius: 2rem;
 }
 
 table {
@@ -57,6 +57,6 @@ td {
     max-width: 900px;
 }
 
-.margin-top-logout{
+.margin-top-logout {
     margin-top: 1.75rem;
 }

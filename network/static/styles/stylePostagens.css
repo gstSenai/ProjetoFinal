@@ -216,7 +216,9 @@ textarea:focus {
     background-color: #218838;
 }
 
-.modal-header, .modal-footer {
+
+
+.modal-footer{
     background-color: #343a40;
     color: #fff;
 }
@@ -235,7 +237,6 @@ footer p {
 }
 
 .modal-header .close {
-    color: #ffffff;
     opacity: 1;
 }
 

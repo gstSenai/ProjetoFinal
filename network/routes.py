@@ -10,20 +10,18 @@ import os
 from werkzeug.utils import secure_filename
 from sqlalchemy import func
 from datetime import datetime
+import pytz
 
 def get_estados():
     response = requests.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
     return response.json()
 
 
-from datetime import datetime
-from flask import flash, redirect, render_template, url_for
-from flask_login import login_user, current_user
+@app.route('/', methods=['GET'])
+def index():
+    return redirect(url_for('homepage'))
 
-from datetime import datetime
-import pytz
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('homepage'))
@@ -44,17 +42,17 @@ def login():
             flash('E-mail ou senha inválidos', 'danger')
     return render_template('login.html', form=form)
 
-
-
 @app.route('/home', methods=['GET'])
-@login_required
 def homepage():
-    if current_user.email == "admin@admin.com":
+    if current_user.is_authenticated and current_user.email == "admin@admin.com":
         return redirect(url_for('pagina_admin'))
+
     context = {
-        'dados': Post.query.all()
+        'dados': Post.query.all(),  
+        'user_authenticated': current_user.is_authenticated
     }
     return render_template('home.html', context=context)
+
 
 from flask import request
 
@@ -83,6 +81,7 @@ def postagens():
 
 
 @app.route('/post_novo', methods=['GET', 'POST'])
+@login_required
 def PostNovo():
     form = PostForm()
 
@@ -136,7 +135,7 @@ def Cadastro():
         user = form.save()
         if user:
             flash('Cadastro realizado com sucesso! Você está agora logado.', 'success')
-            return redirect(url_for('homepage'))
+            return redirect(url_for('login'))
         else:
             flash('Erro ao cadastrar o usuário. Tente novamente.', 'danger')
     return render_template('cadastro.html', form=form)
@@ -146,7 +145,7 @@ def Cadastro():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('homepage'))
+    return redirect(url_for('index'))
 
 
 from flask import jsonify

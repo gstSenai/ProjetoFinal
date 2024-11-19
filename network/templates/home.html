@@ -6,13 +6,15 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/stylePaginaPrincipal.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/styleHeader.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Arial&display=swap" rel="stylesheet">
 
 <header>
     <nav class="navbar navbar-expand-lg">
         <a class="navbar-brand" href="{{ url_for('homepage') }}">
             <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" width="100">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
@@ -29,31 +31,70 @@
                     <a class="nav-link" href="{{ url_for('historico') }}">Histórico</a>
                 </li>
             </ul>
-            <div class="d-flex flex-row align-items-center mt-3">
-                <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}" alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
-                <span class="text-white">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
+
+            <div class="d-flex ms-auto align-items-center">
+                {% if current_user.is_authenticated %}
+                <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}"
+                    alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
+                <span class="text-white font-medium me-2">
+                    {{ current_user.nome }} {{ current_user.sobrenome }}
+                </span>
                 <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-link text-white p-0" id="userDropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         <i class="fas fa-chevron-down"></i>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="{{ url_for('profile') }}">Configurações</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
-                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a href="{{ url_for('profile') }}" class="dropdown-item">Configurações</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a href="{{ url_for('logout') }}" class="dropdown-item">Logout</a></li>
+                    </ul>
                 </div>
+                {% else %}
+                <div class="d-flex">
+                    <a href="{{ url_for('login') }}" class="btn text-white">Login</a>
+                    <a href="{{ url_for('Cadastro') }}" class="btn text-white">Cadastro</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </nav>
 </header>
 
-<section class="mt-5">
+<section class="mt-5 welcome-section">
     <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" class="imagemLogo-pagPrin">
     <div class="descricao">
-        <p>Bem Vindo a GP! Somos uma empresa que foca em <br> trazer novas experiências para quem procura pessoas <br>qualificadas no mercado para contratar para sua empresa</p>
+        <p>Bem Vindo a GP! Somos uma empresa que foca em <br> trazer novas experiências para quem procura pessoas
+            <br>qualificadas no mercado para contratar para sua empresa</p>
     </div>
     <a href="{{ url_for('PostNovo') }}" class="btn-post text-decoration-none">Faça seu primeiro post</a>
 </section>
+
+<section class="mt-5 py-5 about-us-section">
+    <div class="container">
+        <h2 class="text-center">Sobre Nós</h2>
+        <p class="text-center lead">
+            Nós somos dois jovens com uma visão inovadora, apaixonados por tecnologia e empreendedorismo. Com o objetivo de transformar o mercado de trabalho e conectar profissionais qualificados às empresas que buscam novos talentos, criamos a GP. Nossa missão é facilitar essa busca, promovendo um ambiente dinâmico e cheio de oportunidades para todos.
+        </p>
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <h3>Inovação e Tecnologia</h3>
+                <p>
+                    Acreditamos que a inovação é a chave para o sucesso. Por isso, investimos constantemente em novas tecnologias que garantem uma experiência de usuário excepcional e um processo de recrutamento mais eficiente.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <h3>Nosso Compromisso</h3>
+                <p>
+                    Nosso compromisso é oferecer uma plataforma segura, intuitiva e fácil de usar, onde tanto empresas quanto candidatos podem se conectar de forma simples e prática. Queremos garantir que as melhores oportunidades de emprego cheguem às pessoas certas.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 <footer class="bg-dark py-4">
     <div class="container text-center">
