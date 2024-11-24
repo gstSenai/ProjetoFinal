@@ -13,11 +13,11 @@ body {
     background-color: #0F0F0F;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;  /* Garante que a altura mínima seja a da tela */
+    min-height: 100vh;  
 }
 
 .container {
-    flex: 1;  /* Faz com que o conteúdo ocupe todo o espaço disponível */
+    flex: 1; 
 }
 
 header {
@@ -61,7 +61,7 @@ footer {
     color: #fff;
     text-align: left;
     padding: 40px 20px;
-    margin-top: auto; /* Faz o footer ir para o final da página */
+    margin-top: auto; 
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -196,4 +196,9 @@ footer .footer-logo {
 .welcome-section p,
 .about-us-section p {
     font-family: 'Georgia', serif; 
+}
+
+.text-size{
+    font-size: 3rem;
+    color: #fff;
 }

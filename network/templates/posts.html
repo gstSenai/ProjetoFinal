@@ -45,8 +45,7 @@
                     </li>
                 </ul>
                 <div class="d-flex flex-row align-items-center mt-3">
-                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}"
-                        alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
+                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem)}}" style="max-width: 40px; margin-right: 10px;">
                     <span class="text-white">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
                     <div class="dropdown">
                         <button class="btn dropdown-toggle text-white" type="button" id="userDropdown"
@@ -87,12 +86,12 @@
                                 value="{{ request.args.get('estado', '') }}">
                         </div>
                         <div class="col-md-3">
-                            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                            <button type="submit" class="btn w-100">Filtrar</button>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-12 text-center">
-                            <button type="reset" class="btn btn-secondary">Limpar Filtros</button>
+                            <button type="reset" class="btn">Limpar Filtros</button>
                         </div>
                     </div>
                 </form>
@@ -138,7 +137,7 @@
 
             </div>
             <div class="d-flex justify-content-center mt-5">
-                <a href="{{ url_for('PostNovo') }}" class="btn btn-primary btn-lg  px-4 py-2 shadow">
+                <a href="{{ url_for('PostNovo') }}" class="btn cor-botao btn-lg  px-4 py-2 shadow">
                     Faça Seu Post
                 </a>
             </div>
@@ -150,12 +149,12 @@
                         <div class="post-header d-flex align-items-center">
                             <img src="{{ url_for('static', filename='assets/' + post.user.imagem) if post.user.imagem else url_for('static', filename='default.png') }}"
                                 alt="Foto do Perfil" class="img-thumbnail" style="max-width: 50px; margin-right: 10px;">
-                            <h4>{{ post.user.nome }} - {{ post.profissao }}</h4>
-                            <p>{{ post.cidade }}, {{ post.estado }}</p>
+                            <h4 class="text-white">{{ post.user.nome }} - {{ post.profissao }}</h4>
+                            <p class="text-white">{{ post.cidade }}, {{ post.estado }}</p>
                         </div>
                         <div class="post-content">
-                            <p>{{ post.mensagem }}</p>
-                            <span class="post-date">{{ post.data_criacao.strftime('%d %b %Y') }}</span>
+                            <p class="text-white">{{ post.mensagem }}</p>
+                            <span class="post-date text-white" >{{ post.data_criacao.strftime('%d %b %Y') }}</span>
                         </div>
                         <div class="post-actions">
                             <button class="like-button not-liked" data-post-id="{{ post.id }}"

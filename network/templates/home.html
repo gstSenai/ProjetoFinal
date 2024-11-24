@@ -34,8 +34,7 @@
 
             <div class="d-flex ms-auto align-items-center">
                 {% if current_user.is_authenticated %}
-                <img src="{{ url_for('static', filename='assets/' + current_user.imagem) if current_user.imagem else url_for('static', filename='default.png') }}"
-                    alt="Foto do Perfil" class="img-thumbnail" style="max-width: 40px; margin-right: 10px;">
+                <img src="{{ url_for('static', filename='assets/' + current_user.imagem)}}" style="max-width: 40px; margin-right: 10px;">
                 <span class="text-white font-medium me-2">
                     {{ current_user.nome }} {{ current_user.sobrenome }}
                 </span>
@@ -74,24 +73,11 @@
 
 <section class="mt-5 py-5 about-us-section">
     <div class="container">
-        <h2 class="text-center">Sobre Nós</h2>
-        <p class="text-center lead">
+        <h2 class="text-center text-size">Sobre Nós</h2>
+        <p class="text-center lead text-white">
             Nós somos dois jovens com uma visão inovadora, apaixonados por tecnologia e empreendedorismo. Com o objetivo de transformar o mercado de trabalho e conectar profissionais qualificados às empresas que buscam novos talentos, criamos a GP. Nossa missão é facilitar essa busca, promovendo um ambiente dinâmico e cheio de oportunidades para todos.
         </p>
-        <div class="row mt-5">
-            <div class="col-md-6">
-                <h3>Inovação e Tecnologia</h3>
-                <p>
-                    Acreditamos que a inovação é a chave para o sucesso. Por isso, investimos constantemente em novas tecnologias que garantem uma experiência de usuário excepcional e um processo de recrutamento mais eficiente.
-                </p>
-            </div>
-            <div class="col-md-6">
-                <h3>Nosso Compromisso</h3>
-                <p>
-                    Nosso compromisso é oferecer uma plataforma segura, intuitiva e fácil de usar, onde tanto empresas quanto candidatos podem se conectar de forma simples e prática. Queremos garantir que as melhores oportunidades de emprego cheguem às pessoas certas.
-                </p>
-            </div>
-        </div>
+        
     </div>
 </section>
 

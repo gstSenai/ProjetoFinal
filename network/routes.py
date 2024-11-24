@@ -1,7 +1,7 @@
 from network import app,db, bcrypt
 from flask import render_template,redirect, url_for, flash, request, session, jsonify, current_app
 from network.models import Post,User,PostComentarios, UserLikes, Message
-from network.forms import PostForm, UserForm, PostComentarioForm, LoginForm
+from network.forms import PostForm, UserForm, PostComentarioForm, LoginForm, EditProfileForm
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_socketio import SocketIO,join_room, leave_room, emit,send
 from sqlalchemy.orm import joinedload
@@ -41,6 +41,7 @@ def login():
         else:
             flash('E-mail ou senha inválidos', 'danger')
     return render_template('login.html', form=form)
+
 
 @app.route('/home', methods=['GET'])
 def homepage():
@@ -104,10 +105,8 @@ def PostNovo():
             db.session.add(nova_postagem)
             db.session.commit()
 
-            flash('Post criado com sucesso!', 'success')
             return redirect(url_for('postagens'))
         except Exception as e:
-            flash('Ocorreu um erro ao criar o post. Tente novamente mais tarde.', 'error')
             return render_template('post_novo.html', form=form)
 
     dados = Post.query.order_by('cidade').all()
@@ -132,13 +131,18 @@ def postLista():
 def Cadastro():
     form = UserForm()
     if form.validate_on_submit():
-        user = form.save()
-        if user:
-            flash('Cadastro realizado com sucesso! Você está agora logado.', 'success')
-            return redirect(url_for('login'))
-        else:
+        try:
+            user = form.save()
+            flash('Usuário cadastrado com sucesso!', 'success') 
+            return redirect(url_for('login'))  
+        except Exception as e:
             flash('Erro ao cadastrar o usuário. Tente novamente.', 'danger')
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'{form[field].label.text}: {error}', 'danger')
     return render_template('cadastro.html', form=form)
+
 
 
 @app.route('/sair/')
@@ -179,7 +183,6 @@ def like_post(post_id):
 def delete_post(post_id):
     post = Post.query.get(post_id)
     if not post:
-        flash('Post não encontrado.', 'error')
         return redirect(url_for('homepage'))
    
     if post.user_id == current_user.id:
@@ -187,13 +190,8 @@ def delete_post(post_id):
             UserLikes.query.filter_by(post_id=post_id).delete()
             db.session.delete(post)
             db.session.commit()
-            flash('Post excluído com sucesso!', 'success')
         except Exception as e:
             db.session.rollback()
-            flash(f'Erro ao excluir o post: {str(e)}', 'danger')
-    else:
-        flash('Você não tem permissão para excluir este post.', 'danger')
-
     return redirect(url_for('postagens'))
 
 
@@ -212,11 +210,6 @@ def add_comment(post_id):
         )
         db.session.add(comentario)
         db.session.commit()
-        flash('Comentário adicionado com sucesso!', 'success')
-    else:
-        flash('Não é possível adicionar um comentário vazio.', 'danger')
-
-
     return redirect(url_for('postagens'))
 
 @app.route('/filter/<string:profession>', methods=['GET'])
@@ -331,22 +324,20 @@ def allowed_file(filename):
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    form = UserForm()
+    form = EditProfileForm()
 
     if form.validate_on_submit():
         current_user.nome = form.nome.data
         current_user.sobrenome = form.sobrenome.data
-        current_user.email = form.email.data
 
         if form.senha.data:
             if form.senha.data == form.confirmacao_senha.data:
                 current_user.senha = bcrypt.generate_password_hash(form.senha.data.encode('utf-8'))
             else:
-                flash('As senhas não coincidem', 'danger')
                 return redirect(url_for('profile'))
 
-        if 'imagem' in request.files:
-            imagem = request.files['imagem']
+        if form.imagem.data:
+            imagem = form.imagem.data
             if imagem and allowed_file(imagem.filename):
                 filename = secure_filename(imagem.filename)
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -354,17 +345,17 @@ def profile():
                 current_user.imagem = filename
 
         db.session.commit()
-        flash('Perfil atualizado com sucesso', 'success')
-        return redirect(url_for('homepage'))
+        return redirect(url_for('profile'))
 
     if request.method == 'GET':
         form.nome.data = current_user.nome
         form.sobrenome.data = current_user.sobrenome
-        form.email.data = current_user.email
 
-    dados = Post.query.order_by('cidade').all()
-    context = {'dados': dados}
-    return render_template('profile.html', form=form, context=context)
+    dados = Post.query.order_by('cidade').all()  
+    context = {'dados': dados}  
+    return render_template('profile.html', form=form, context=context) 
+
+
 
 
 
@@ -408,13 +399,8 @@ def excluir_usuario(user_id):
             db.session.delete(user)
             db.session.commit()
 
-            flash('Usuário e seus dados relacionados foram excluídos com sucesso!', 'success')
         except Exception as e:
             db.session.rollback() 
-            flash(f'Erro ao excluir o usuário: {str(e)}', 'danger')
-    else:
-        flash('Você não tem permissão para excluir usuários!', 'danger')
-
     return redirect(url_for('pagina_admin'))
 
 @app.route('/historico')

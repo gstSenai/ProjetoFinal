@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, FileField, SelectField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length, Optional
 from network import db, app, bcrypt
 from network.models import PostComentarios, User, Post
 from flask_login import current_user
@@ -15,16 +15,16 @@ class UserForm(FlaskForm):
     nome = StringField('Nome', validators=[DataRequired()])
     sobrenome = StringField('Sobrenome', validators=[DataRequired()])
     email = StringField('E-mail', validators=[DataRequired(), Email()])
-    senha = PasswordField('Senha', validators=[DataRequired(), Length(min=6)])
-    confirmacao_senha = PasswordField('Confirmar senha', validators=[DataRequired(), EqualTo('senha')])
+    senha = PasswordField('Senha', validators=[DataRequired(), Length(min=6, message="A senha deve ter pelo menos 6 caracteres.")])
+    confirmacao_senha = PasswordField('Confirmar senha', validators=[DataRequired(), EqualTo('senha', message="As senhas devem ser iguais.")])
     btnSubmit = SubmitField('Cadastrar')
 
-    def validade_email(self, email):
+    def validate_email(self, email):
         if User.query.filter_by(email=email.data).first():
             raise ValidationError('Usuário já cadastrado com esse E-mail!!!')
 
     def save(self):
-        senha = bcrypt.generate_password_hash(self.senha.data.encode('utf-8'))
+        senha = bcrypt.generate_password_hash(self.senha.data).decode('utf-8')
         user = User(
             nome=self.nome.data,
             sobrenome=self.sobrenome.data,
@@ -34,6 +34,16 @@ class UserForm(FlaskForm):
         db.session.add(user)
         db.session.commit()
         return user
+    
+class EditProfileForm(FlaskForm):
+    nome = StringField('Nome', validators=[DataRequired()])
+    sobrenome = StringField('Sobrenome', validators=[DataRequired()])
+    senha = PasswordField('Senha', validators=[Optional(), Length(min=6, message="A senha deve ter pelo menos 6 caracteres.")])
+    confirmacao_senha = PasswordField('Confirmar senha', validators=[Optional(), EqualTo('senha', message="As senhas devem ser iguais.")])
+    imagem = FileField('Imagem de Perfil', validators=[Optional()])
+    btnSubmit = SubmitField('Salvar')
+
+
 
 class LoginForm(FlaskForm):
     email = StringField('E-Mail', validators=[DataRequired(), Email()])

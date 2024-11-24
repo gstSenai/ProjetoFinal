@@ -19,6 +19,16 @@ body {
     margin-bottom: 30px;
 }
 
+.cor-botao {
+    background-color: #FF914D !important;
+    color: white  !important;
+}
+
+.cor-botao:hover {
+    background-color: #b66939 !important; 
+    color: white !important;
+}
+
 .profile-header img {
     border-radius: 50%;
     width: 120px;
