@@ -36,7 +36,7 @@
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('historico') }}">Histórico</a>
+                        <a class="nav-link" href="{{ url_for('historico') }}">Minhas Postagens</a>
                     </li>
                 </ul>
                 <div class="d-flex flex-row align-items-center mt-3">
@@ -58,8 +58,8 @@
         </nav>
     </header>
 
-    <div class="container mt-4">
-        <h3 class="text-center mb-4">Novo Post</h3>
+    <div class="container ">
+        <h3 class="text-center mb-4">Divulgue Suas Experiências Aqui</h3>
         <form method="post" action="{{ url_for('PostNovo') }}" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
 

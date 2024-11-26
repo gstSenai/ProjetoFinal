@@ -47,7 +47,7 @@
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('historico') }}">Histórico</a>
+                        <a class="nav-link" href="{{ url_for('historico') }}">Minhas Postagens</a>
                     </li>
                 </ul>
                 <div class="d-flex flex-row align-items-center mt-3">
@@ -69,7 +69,7 @@
         </nav>
     </header>
     <div class="container mt-4 ">
-        <h1 class="mb-4">Histórico de Postagens</h1>
+        <h1 class="mb-4">Minhas Postagens</h1>
         <div class="list-group">
             {% for post in postagens %}
             <div class="list-group-item mt-5">

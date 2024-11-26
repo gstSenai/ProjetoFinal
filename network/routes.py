@@ -12,9 +12,6 @@ from sqlalchemy import func
 from datetime import datetime
 import pytz
 
-def get_estados():
-    response = requests.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
-    return response.json()
 
 
 @app.route('/', methods=['GET'])
@@ -79,6 +76,10 @@ def postagens():
     
     context = {'dados': dados}
     return render_template('posts.html', context=context)
+
+def get_estados():
+    response = requests.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+    return response.json()
 
 
 @app.route('/post_novo', methods=['GET', 'POST'])
@@ -188,11 +189,16 @@ def delete_post(post_id):
     if post.user_id == current_user.id:
         try:
             UserLikes.query.filter_by(post_id=post_id).delete()
+
+            Message.query.filter_by(post_id=post_id).delete()
+
             db.session.delete(post)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
+    
     return redirect(url_for('postagens'))
+
 
 
 @app.route('/post/<int:post_id>/add_comment', methods=['POST'])
@@ -354,10 +360,6 @@ def profile():
     dados = Post.query.order_by('cidade').all()  
     context = {'dados': dados}  
     return render_template('profile.html', form=form, context=context) 
-
-
-
-
 
 @app.route('/admin')
 @login_required

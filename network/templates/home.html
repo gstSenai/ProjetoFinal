@@ -28,13 +28,14 @@
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('historico') }}">Histórico</a>
+                    <a class="nav-link" href="{{ url_for('historico') }}">Minhas Postagens</a>
                 </li>
             </ul>
 
             <div class="d-flex ms-auto align-items-center">
                 {% if current_user.is_authenticated %}
-                <img src="{{ url_for('static', filename='assets/' + current_user.imagem)}}" style="max-width: 40px; margin-right: 10px;">
+                <img src="{{ url_for('static', filename='assets/' + current_user.imagem)}}"
+                    style="max-width: 40px; margin-right: 10px;">
                 <span class="text-white font-medium me-2">
                     {{ current_user.nome }} {{ current_user.sobrenome }}
                 </span>
@@ -66,7 +67,8 @@
     <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" class="imagemLogo-pagPrin">
     <div class="descricao">
         <p>Bem Vindo a GP! Somos uma empresa que foca em <br> trazer novas experiências para quem procura pessoas
-            <br>qualificadas no mercado para contratar para sua empresa</p>
+            <br>qualificadas no mercado para contratar para sua empresa
+        </p>
     </div>
     <a href="{{ url_for('PostNovo') }}" class="btn-post text-decoration-none">Faça seu primeiro post</a>
 </section>
@@ -74,10 +76,15 @@
 <section class="mt-5 py-5 about-us-section">
     <div class="container">
         <h2 class="text-center text-size">Sobre Nós</h2>
-        <p class="text-center lead text-white">
-            Nós somos dois jovens com uma visão inovadora, apaixonados por tecnologia e empreendedorismo. Com o objetivo de transformar o mercado de trabalho e conectar profissionais qualificados às empresas que buscam novos talentos, criamos a GP. Nossa missão é facilitar essa busca, promovendo um ambiente dinâmico e cheio de oportunidades para todos.
-        </p>
-        
+        <div class="mt-4">
+            <p class="text-center lead text-white">
+                Nós somos dois jovens com uma visão inovadora, apaixonados por tecnologia e empreendedorismo. Com o
+                objetivo de transformar o mercado de trabalho e conectar profissionais qualificados às empresas que
+                buscam novos talentos, criamos a GP. Nossa missão é facilitar essa busca, promovendo um ambiente
+                dinâmico e cheio de oportunidades para todos.
+            </p>
+        </div>
+
     </div>
 </section>
 

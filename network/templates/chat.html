@@ -40,7 +40,8 @@
                     </li>
                 </ul>
                 <div class="d-flex flex-row align-items-center mt-3">
-                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem)}}" style="max-width: 40px; margin-right: 10px;">
+                    <img src="{{ url_for('static', filename='assets/' + current_user.imagem)}}"
+                        style="max-width: 40px; margin-right: 10px;">
                     <span class="text-white">{{ current_user.nome }} {{ current_user.sobrenome }}</span>
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown"
@@ -104,7 +105,7 @@
             </div>
         </div>
     </footer>
-    
+
 
     <script>
         const socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -132,8 +133,10 @@
             messageElement.classList.add('message', fromMe ? 'from-me' : 'from-others');
             messageElement.textContent = message;
             chatMessages.appendChild(messageElement);
+
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+
 
         sendButton.addEventListener('click', () => {
             const message = messageInput.value.trim();

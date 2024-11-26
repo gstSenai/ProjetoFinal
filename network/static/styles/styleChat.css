@@ -15,6 +15,12 @@ body {
     height: 100%;
 }
 
+#chat-messages {
+    max-height: 500px; 
+    overflow-y: auto;  
+}
+
+
 .user-list-container {
     width: 30%;
     background-color: #121212;
